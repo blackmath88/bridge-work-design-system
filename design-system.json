@@ -1,0 +1,388 @@
+{
+  "system": "bridge-work.ai Design System",
+  "version": "1.0",
+  "updated": "2026-05-18",
+
+  "philosophy": {
+    "positioning": "Institutional intelligence practice. Not SaaS, not startup, not agency.",
+    "tone": "Quiet confidence. Premium. Architectural. Swiss editorial.",
+    "principle": "The page should whisper, not shout.",
+    "visual_territory": "Recursive modular geometry — infrastructure-grade, not decorative.",
+    "reference_feeling": "Apple flagship store meets Swiss transport system meets architecture publication."
+  },
+
+  "palette": {
+    "core": {
+      "black": "#050505",
+      "cream": "#f0ebe3",
+      "cream_dark": "#c8c2b8"
+    },
+    "primary": {
+      "teal": "#1a7a6d",
+      "teal_dark": "#0f5c52",
+      "teal_deep": "#0a4a3f"
+    },
+    "secondary": {
+      "purple": "#3d1f47",
+      "purple_mid": "#5a3068",
+      "purple_deep": "#2a1433"
+    },
+    "accent": {
+      "rose": "#d4416b",
+      "usage": "Sparingly. Only in signal mark, active states, and one strip segment. Rose is earned through interaction."
+    },
+    "tool_accents": {
+      "description": "Each sub-tool gets its own accent color. This replaces rose in the signal mark arc, active states, and interactive highlights.",
+      "bridge_work": { "color": "#d4416b", "name": "rose", "label": "Primary platform" },
+      "insight": { "color": "#c48a2a", "name": "amber", "label": "Analysis tools" },
+      "connect": { "color": "#2a8fa0", "name": "cyan", "label": "Integration layer" },
+      "govern": { "color": "#8a5ac4", "name": "violet", "label": "Governance suite" }
+    },
+    "rules": {
+      "background": "Always black (#050505). No light sections. No mixed modes on landing pages.",
+      "text_hierarchy": {
+        "headline_bright": "rgba(255,255,255,1) — the first line only",
+        "headline_dim": "rgba(255,255,255,0.12-0.14) — secondary lines",
+        "body": "rgba(255,255,255,0.3) — statements",
+        "metadata": "rgba(255,255,255,0.12-0.15) — labels, locations",
+        "ghost": "rgba(255,255,255,0.04-0.06) — footer, idle numbers",
+        "hover": "rgba(255,255,255,0.4-0.5) — interactive hover states"
+      },
+      "accent_usage": "Accent color appears in: signal mark arc, active capability number, active geometry middle tile, first value dot, active border tint. Nowhere else.",
+      "cream_usage": "1-2 tiles per grid composition at low opacity. Warm punctuation against cool palette."
+    }
+  },
+
+  "typography": {
+    "display": {
+      "family": "Space Grotesk",
+      "weights": [300, 400, 500],
+      "usage": "Headlines, numbers, wordmark. Weight 300 for large display, 400-500 for smaller.",
+      "letter_spacing": "-0.045em at display size, -0.04em at medium, -0.01em at small",
+      "why": "Mid-century geometric DNA. Shares mathematical precision with the modular forms. Futura's grandchild."
+    },
+    "body": {
+      "family": "Inter",
+      "weights": [300, 400, 500],
+      "usage": "Body text, descriptions (when needed). Weight 300-400.",
+      "letter_spacing": "0 to 0.02em"
+    },
+    "system": {
+      "family": "DM Mono",
+      "weights": [300, 400],
+      "usage": "Labels, metadata, eyebrows, footer, navigation links, value props, email addresses.",
+      "letter_spacing": "0.06em to 0.22em",
+      "text_transform": "uppercase (always)"
+    },
+    "font_load_url": "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Inter:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap",
+    "scale": {
+      "hero_headline": "clamp(2.4rem, 6vw, 5rem)",
+      "section_headline": "clamp(1.8rem, 4vw, 3.2rem)",
+      "statement": "clamp(1rem, 1.6vw, 1.15rem)",
+      "capability_number": "26px",
+      "capability_title": "15px",
+      "metadata": "9px",
+      "footer": "8px"
+    }
+  },
+
+  "logo": {
+    "name": "Signal Mark",
+    "type": "2x2 grid: 3 squares + 1 quarter-circle arc",
+    "geometry": {
+      "viewBox": "0 0 100 100",
+      "padding": 5,
+      "gap": 3,
+      "module_size": 43.5,
+      "corner_radius": 1.5,
+      "arc_position": "bottom-right (default)"
+    },
+    "colors": {
+      "top_left": "teal (primary structure)",
+      "top_right": "purple (depth)",
+      "bottom_left": "purple (depth)",
+      "bottom_right_arc": "accent color (rose for primary, changes per tool)"
+    },
+    "svg": "<svg viewBox='0 0 100 100'><rect x='5' y='5' width='43.5' height='43.5' rx='1.5' fill='#1a7a6d'/><rect x='51.5' y='5' width='43.5' height='43.5' rx='1.5' fill='#3d1f47'/><rect x='5' y='51.5' width='43.5' height='43.5' rx='1.5' fill='#3d1f47'/><path d='M51.5 95 Q51.5 51.5 95 51.5 L95 95 Z' fill='#d4416b'/></svg>",
+    "wordmark": {
+      "text": "bridge-work.ai",
+      "bridge_work_weight": 500,
+      "dot_ai_weight": 300,
+      "dot_ai_color": "accent color",
+      "font": "Space Grotesk",
+      "size": "12.5px in nav"
+    },
+    "sizes": {
+      "nav": 17,
+      "contact": 20,
+      "footer": 8
+    }
+  },
+
+  "geometric_primitives": {
+    "description": "SVG shapes that fill a square cell. Each is defined within a viewBox of 0 0 S S where S is the cell size.",
+    "types": {
+      "sq": "Full square with rx=2",
+      "arc-br": "Quarter circle, arc from top-left to bottom-right corner",
+      "arc-tl": "Quarter circle, arc from bottom-right to top-left corner",
+      "arc-tr": "Quarter circle, arc from bottom-left to top-right corner",
+      "arc-bl": "Quarter circle, arc from top-right to bottom-left corner",
+      "leaf": "Double-curve leaf shape (top-left to bottom-right)",
+      "leaf-inv": "Inverse leaf (top-right to bottom-left)",
+      "half-t": "Half circle, flat edge at top",
+      "half-b": "Half circle, flat edge at bottom",
+      "half-l": "Half circle, flat edge at left",
+      "circle": "Circle centered, radius = 44% of cell size"
+    },
+    "svg_paths": {
+      "sq": "<rect width='S' height='S' rx='2' fill='COLOR'/>",
+      "arc-br": "<path d='M0 S Q0 0 S 0 LS S Z' fill='COLOR'/>",
+      "arc-tl": "<path d='MS 0 Q0 0 0 S LS S Z' fill='COLOR'/>",
+      "arc-tr": "<path d='M0 0 QS 0 S S L0 S Z' fill='COLOR'/>",
+      "arc-bl": "<path d='MS S Q0 S 0 0 LS 0 Z' fill='COLOR'/>",
+      "leaf": "<path d='M0 0 QS 0 S S Q0 S 0 0 Z' fill='COLOR'/>",
+      "leaf-inv": "<path d='MS 0 Q0 0 0 S QS S S 0 Z' fill='COLOR'/>",
+      "half-t": "<ellipse cx='S/2' cy='S' rx='S/2' ry='S/2' fill='COLOR'/>",
+      "half-b": "<ellipse cx='S/2' cy='0' rx='S/2' ry='S/2' fill='COLOR'/>",
+      "half-l": "<ellipse cx='S' cy='S/2' rx='S/2' ry='S/2' fill='COLOR'/>",
+      "circle": "<circle cx='S/2' cy='S/2' r='S*0.44' fill='COLOR'/>"
+    },
+    "colors_used": ["teal", "teal_dark", "teal_deep", "purple", "purple_mid", "purple_deep", "cream", "cream_dark"],
+    "note": "Accent color (rose/amber/cyan/violet) only appears in signal mark and active interaction states, NEVER in background geometry grids."
+  },
+
+  "breathing_grid": {
+    "description": "Animated background of geometric tiles that independently pulse in opacity.",
+    "mechanics": {
+      "each_tile_has": {
+        "type": "One of the geometric primitives",
+        "color": "One of the palette colors (no accent)",
+        "speed": "0.25-0.6 for hero, 0.12-0.28 for services (cycles per second)",
+        "phase": "0-6.28 (radians, random offset so tiles don't sync)"
+      },
+      "opacity_formula": "baseOp + (peakOp - baseOp) * max(0, sin(time * speed + phase))^2",
+      "squared_pulse": "Squaring the pulse creates sharp bright peaks and long dim rests"
+    },
+    "hero_grid": {
+      "cols": 4,
+      "rows": 4,
+      "tile_size": 80,
+      "gap": 28,
+      "dim_left": true,
+      "dim_left_formula": "multiplier = 0.15 + (col / (cols-1)) * 0.85",
+      "base_opacity": 0.08,
+      "peak_opacity": 0.45,
+      "cream_base": 0.04,
+      "cream_peak": 0.2
+    },
+    "services_grid": {
+      "description": "Calmer, slower version behind capability bands",
+      "tile_size": 40,
+      "gap": 10,
+      "speeds": "0.12-0.28",
+      "used_in": "BreathingStrip component (3 tiles per capability)"
+    }
+  },
+
+  "strip_divider": {
+    "description": "Thin horizontal line made of colored segments between sections.",
+    "height": "1px",
+    "gap": "2px between segments",
+    "padding": "Same as page edge padding",
+    "sequence": ["teal", "purple", "teal_dark", "purple", "teal", "purple_mid", "teal_dark", "purple", "rose", "purple", "teal", "teal_dark", "purple", "teal_dark"],
+    "opacity": "0.18 for teal/purple segments, 0.45 for rose segment",
+    "note": "Rose segment is always index 8 (9th position). It's the only accent in the strip."
+  },
+
+  "page_structure": {
+    "landing_page": {
+      "sections": [
+        {
+          "id": "hero",
+          "height": "100vh exactly",
+          "content": "Opening statement + headline + mini strip + metadata",
+          "background": "Breathing grid (animated, hero only)",
+          "scroll_indicator": "Centered arrow at bottom, 12% opacity, fades on scroll"
+        },
+        {
+          "id": "strip_1",
+          "type": "strip_divider"
+        },
+        {
+          "id": "capabilities",
+          "content": "Section label + 3 expandable capability bands",
+          "interaction": "Click to expand/collapse. Only one open at a time."
+        },
+        {
+          "id": "strip_2",
+          "type": "strip_divider",
+          "opacity": 0.1
+        },
+        {
+          "id": "contact",
+          "content": "Signal mark + headline + email + LinkedIn"
+        },
+        {
+          "id": "footer",
+          "content": "Tiny mark + copyright + legal links"
+        }
+      ]
+    }
+  },
+
+  "capability_band": {
+    "description": "Horizontal row: geometry strip left, number + title right. Expandable.",
+    "layout": "CSS grid: auto 1fr auto",
+    "geometry_strip": {
+      "tiles": 3,
+      "tile_size": 40,
+      "gap": 10,
+      "width": "180px container"
+    },
+    "states": {
+      "idle": {
+        "geometry_opacity": 0.2,
+        "number_color": "rgba(255,255,255,0.04)",
+        "title_color": "rgba(255,255,255,0.5)",
+        "arrow_opacity": 0,
+        "border_bottom": "rgba(255,255,255,0.02)"
+      },
+      "hover": {
+        "geometry_opacity": 0.45,
+        "number_color": "teal",
+        "title_color": "cream",
+        "title_transform": "translateX(3px)",
+        "arrow_opacity": 0.5,
+        "arrow_color": "teal",
+        "border_bottom": "rgba(26,122,109,0.12)"
+      },
+      "active": {
+        "geometry_opacity": 0.7,
+        "geometry_middle_tile_color": "accent color (rose)",
+        "number_color": "accent color (rose)",
+        "title_color": "cream",
+        "title_transform": "translateX(3px)",
+        "arrow_rotation": "90deg",
+        "arrow_color": "accent color (rose)",
+        "arrow_opacity": 0.5,
+        "border_bottom": "rgba(accent, 0.15)"
+      }
+    },
+    "expanded_content": {
+      "padding_left": "208px (aligned with title)",
+      "items": "3 value props per capability",
+      "layout": "Horizontal flex with gap 32px, wraps on mobile",
+      "dot": "4×4px, border-radius 1px, first dot = accent color, rest = teal, 50% opacity",
+      "text": "DM Mono, 10px, 0.04em spacing, rgba(255,255,255,0.3)",
+      "animation": "max-height transition 0.5s cubic-bezier(0.22,1,0.36,1)"
+    }
+  },
+
+  "navigation": {
+    "position": "fixed top",
+    "height": 52,
+    "content": "Signal mark + wordmark (left), language toggle (right)",
+    "scroll_behavior": {
+      "idle": "transparent background, no blur",
+      "scrolled": "rgba(5,5,5,0.94) background, blur(32px)",
+      "transition": "0.6s cubic-bezier(0.22,1,0.36,1)"
+    },
+    "language_toggle": {
+      "options": ["EN", "DE"],
+      "default": "EN",
+      "font": "DM Mono, 9px, 0.06em spacing",
+      "active_color": "rgba(255,255,255,0.4)",
+      "inactive_color": "rgba(255,255,255,0.1)"
+    }
+  },
+
+  "scroll_indicator": {
+    "position": "absolute bottom center of hero",
+    "icon": "Simple arrow down SVG, 14×20px",
+    "opacity": 0.15,
+    "behavior": "Fades to 0 when scrollY > 60px",
+    "click": "Smooth scrolls to #below"
+  },
+
+  "animations": {
+    "reveal": {
+      "initial": "opacity 0, translateY(14px)",
+      "visible": "opacity 1, translateY(0)",
+      "duration": "1.1s",
+      "easing": "cubic-bezier(0.22, 1, 0.36, 1)",
+      "trigger": "IntersectionObserver, threshold 0.05",
+      "stagger": "0.05-0.2s delay between elements"
+    },
+    "hover_transitions": "0.3-0.5s with same cubic-bezier",
+    "expand_collapse": "max-height 0.5s cubic-bezier(0.22,1,0.36,1)",
+    "avoid": "No particles, no floating elements, no playful effects, no excessive motion"
+  },
+
+  "spacing": {
+    "page_edge": "clamp(24px, 6vw, 72px)",
+    "max_content_width": "900px (capabilities, contact), 600px (hero text)",
+    "section_padding": "80px vertical",
+    "between_sections": "Strip divider only, no extra space",
+    "capability_band_padding": "28px vertical"
+  },
+
+  "copy": {
+    "en": {
+      "hero_opener": "Buying AI is easy.",
+      "hero_headline_bright": "But impact begins",
+      "hero_headline_dim": "when work\nis rethought.",
+      "hero_but": "But (at 14% opacity, quiet connective)",
+      "metadata": "Basel · Switzerland · Platform-agnostic",
+      "capabilities_label": "Capabilities",
+      "cap_1": "Adoption Architecture",
+      "cap_2": "Responsible Enablement",
+      "cap_3": "Strategic Translation",
+      "cap_1_values": ["Readiness assessment", "Use case identification", "Governance foundations"],
+      "cap_2_values": ["Risk-aware adoption", "Compliance integration", "Sustainable capability"],
+      "cap_3_values": ["Leadership clarity", "Stakeholder alignment", "Decision architecture"],
+      "contact_headline": "Ready?",
+      "footer_copyright": "© 2026 bridge-work.ai",
+      "footer_links": ["Imprint", "Privacy"]
+    },
+    "de": {
+      "hero_opener": "KI kaufen ist einfach.",
+      "hero_headline_bright": "Aber Wirkung entsteht,",
+      "hero_headline_dim": "wenn Arbeit\nneu gedacht wird.",
+      "hero_but": "Aber (at 14% opacity)",
+      "metadata": "Basel · Schweiz · Plattformunabhängig",
+      "capabilities_label": "Fähigkeiten",
+      "cap_1": "Adoption Architecture",
+      "cap_2": "Responsible Enablement",
+      "cap_3": "Strategic Translation",
+      "cap_1_values": ["Readiness-Analyse", "Use-Case-Identifikation", "Governance-Grundlagen"],
+      "cap_2_values": ["Risikobewusste Adoption", "Compliance-Integration", "Nachhaltige Fähigkeiten"],
+      "cap_3_values": ["Leadership-Klarheit", "Stakeholder-Alignment", "Entscheidungsarchitektur"],
+      "contact_headline": "Bereit?",
+      "footer_copyright": "© 2026 bridge-work.ai",
+      "footer_links": ["Impressum", "Datenschutz"]
+    },
+    "note": "Capability titles stay English in both languages — they are premium labels, not translations."
+  },
+
+  "tool_theming": {
+    "description": "When building a sub-tool page, swap the accent color. Everything else stays identical.",
+    "what_changes": [
+      "Signal mark bottom-right arc color",
+      "Wordmark .ai color",
+      "Active capability number color",
+      "Active capability middle geometry tile",
+      "Active capability border tint",
+      "First value prop dot color",
+      "Strip divider accent segment (index 8)",
+      "Any interactive highlight or active state"
+    ],
+    "what_stays": [
+      "All teal/purple/black/cream usage",
+      "Typography",
+      "Layout and spacing",
+      "Animation behavior",
+      "Breathing grid colors (never use accent in grids)",
+      "Idle state colors"
+    ]
+  }
+}
