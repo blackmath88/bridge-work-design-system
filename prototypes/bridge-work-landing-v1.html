@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bridge Work — AI Adoption & Governance Translation</title>
+  <meta name="description" content="Bridge Work helps governance-sensitive organisations turn AI from possibility into real, governed work." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Inter:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #050505;
+      --cream: #f0ebe3;
+      --cream-dark: #c8c2b8;
+      --teal: #1a7a6d;
+      --teal-dark: #0f5c52;
+      --teal-deep: #0a4a3f;
+      --purple: #3d1f47;
+      --purple-mid: #5a3068;
+      --purple-deep: #2a1433;
+      --accent: #d4416b;
+      --text-bright: rgba(255,255,255,1);
+      --text-dim: rgba(255,255,255,0.14);
+      --text-body: rgba(255,255,255,0.32);
+      --text-meta: rgba(255,255,255,0.16);
+      --text-ghost: rgba(255,255,255,0.055);
+      --text-hover: rgba(255,255,255,0.5);
+      --edge: clamp(24px, 6vw, 72px);
+      --max-w: 980px;
+      --max-w-hero: 720px;
+      --font-display: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-mono: 'DM Mono', monospace;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      min-height: 100vh;
+      background: var(--black);
+      color: var(--cream);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    ::selection { background: var(--teal); color: var(--cream); }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+
+    .nav {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 20;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--edge);
+      background: linear-gradient(to bottom, rgba(5,5,5,0.74), rgba(5,5,5,0));
+      backdrop-filter: blur(0px);
+    }
+    .brand { display: inline-flex; gap: 10px; align-items: center; }
+    .mark { width: 18px; height: 18px; display: block; }
+    .wordmark {
+      font-family: var(--font-display);
+      font-size: 13px;
+      letter-spacing: -0.03em;
+      font-weight: 500;
+      color: rgba(255,255,255,0.76);
+    }
+    .wordmark span { color: var(--accent); font-weight: 300; }
+    .navlinks { display: flex; gap: 28px; align-items: center; }
+    .navlinks a {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-meta);
+      transition: color .5s var(--ease);
+    }
+    .navlinks a:hover { color: var(--text-hover); }
+
+    .hero {
+      position: relative;
+      min-height: 100svh;
+      display: grid;
+      align-items: center;
+      padding: 92px var(--edge) 54px;
+      overflow: hidden;
+    }
+    .breathing-grid {
+      position: absolute;
+      right: clamp(-110px, 7vw, 90px);
+      top: 50%;
+      width: 404px;
+      height: 404px;
+      transform: translateY(-50%);
+      opacity: .92;
+      pointer-events: none;
+    }
+    .tile { animation: breathe 6.5s ease-in-out infinite; transform-origin: center; }
+    .tile:nth-child(1) { animation-delay: 0s; opacity: .04; }
+    .tile:nth-child(2) { animation-delay: -1.4s; opacity: .05; }
+    .tile:nth-child(3) { animation-delay: -3.1s; opacity: .12; }
+    .tile:nth-child(4) { animation-delay: -.8s; opacity: .20; }
+    .tile:nth-child(5) { animation-delay: -2.2s; opacity: .05; }
+    .tile:nth-child(6) { animation-delay: -4.5s; opacity: .09; }
+    .tile:nth-child(7) { animation-delay: -1s; opacity: .11; }
+    .tile:nth-child(8) { animation-delay: -5.2s; opacity: .22; }
+    .tile:nth-child(9) { animation-delay: -3.6s; opacity: .06; }
+    .tile:nth-child(10) { animation-delay: -.5s; opacity: .10; }
+    .tile:nth-child(11) { animation-delay: -2.8s; opacity: .22; }
+    .tile:nth-child(12) { animation-delay: -4s; opacity: .16; }
+    .tile:nth-child(13) { animation-delay: -5.8s; opacity: .07; }
+    .tile:nth-child(14) { animation-delay: -1.7s; opacity: .13; }
+    .tile:nth-child(15) { animation-delay: -3.3s; opacity: .18; }
+    .tile:nth-child(16) { animation-delay: -.3s; opacity: .34; }
+    @keyframes breathe {
+      0%, 72%, 100% { opacity: .055; }
+      38% { opacity: .38; }
+    }
+
+    .hero-inner { position: relative; z-index: 2; max-width: var(--max-w-hero); }
+    .eyebrow, .label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      line-height: 1.6;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--text-meta);
+    }
+    h1 {
+      margin-top: 24px;
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 7vw, 5.8rem);
+      line-height: .93;
+      letter-spacing: -.06em;
+      font-weight: 300;
+    }
+    h1 .bright { color: var(--text-bright); }
+    h1 .dim { color: var(--text-dim); }
+    .opener {
+      margin-top: 32px;
+      max-width: 590px;
+      font-size: clamp(1rem, 1.5vw, 1.14rem);
+      line-height: 1.75;
+      font-weight: 300;
+      color: var(--text-body);
+    }
+    .hero-actions { margin-top: 42px; display: flex; gap: 18px; flex-wrap: wrap; align-items: center; }
+    .link-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      height: 42px;
+      padding: 0 16px;
+      border: 1px solid rgba(255,255,255,.08);
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.42);
+      transition: border-color .5s var(--ease), color .5s var(--ease), transform .5s var(--ease);
+    }
+    .link-button:hover { border-color: rgba(212,65,107,.36); color: rgba(255,255,255,.72); transform: translateY(-1px); }
+    .quiet-link {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--text-meta);
+      transition: color .5s var(--ease);
+    }
+    .quiet-link:hover { color: var(--text-hover); }
+
+    .strip { display: grid; grid-template-columns: repeat(14, 1fr); gap: 2px; padding: 0 var(--edge); height: 1px; opacity: .92; }
+    .strip span { height: 1px; opacity: .18; }
+    .strip .accent { opacity: .45; background: var(--accent); }
+
+    main section { padding: 130px var(--edge); }
+    .section-inner { max-width: var(--max-w); margin: 0 auto; }
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(120px, .35fr) 1fr;
+      gap: clamp(28px, 6vw, 80px);
+      align-items: start;
+      margin-bottom: 58px;
+    }
+    h2 {
+      font-family: var(--font-display);
+      font-weight: 300;
+      font-size: clamp(1.9rem, 4vw, 3.35rem);
+      line-height: 1.04;
+      letter-spacing: -.05em;
+      color: rgba(255,255,255,.88);
+    }
+    h2 span { color: var(--text-dim); }
+    .statement {
+      font-size: clamp(1rem, 1.4vw, 1.12rem);
+      line-height: 1.8;
+      color: var(--text-body);
+      font-weight: 300;
+    }
+
+    .bands { border-top: 1px solid rgba(255,255,255,.06); }
+    .band { border-bottom: 1px solid rgba(255,255,255,.06); }
+    .band-button {
+      width: 100%;
+      min-height: 116px;
+      display: grid;
+      grid-template-columns: 76px 160px 1fr 32px;
+      gap: 24px;
+      align-items: center;
+      text-align: left;
+      padding: 22px 0;
+    }
+    .num {
+      font-family: var(--font-display);
+      font-size: 27px;
+      letter-spacing: -.04em;
+      color: var(--text-ghost);
+      transition: color .5s var(--ease);
+    }
+    .mini-geo { width: 112px; height: 34px; display: grid; grid-template-columns: repeat(3, 34px); gap: 6px; opacity: .24; transition: opacity .5s var(--ease); }
+    .mini-geo svg { width: 34px; height: 34px; display: block; }
+    .band-title {
+      font-family: var(--font-display);
+      font-size: 17px;
+      letter-spacing: -.02em;
+      color: rgba(255,255,255,.52);
+      transition: color .5s var(--ease), transform .5s var(--ease);
+    }
+    .plus { color: var(--text-meta); font-size: 20px; font-weight: 300; transition: transform .5s var(--ease), color .5s var(--ease); }
+    .band:hover .num, .band.active .num { color: var(--accent); }
+    .band:hover .mini-geo, .band.active .mini-geo { opacity: .58; }
+    .band:hover .band-title, .band.active .band-title { color: rgba(255,255,255,.82); transform: translateX(8px); }
+    .band.active .plus { transform: rotate(45deg); color: var(--accent); }
+    .band-panel {
+      display: grid;
+      grid-template-columns: 76px 160px 1fr 32px;
+      gap: 24px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .8s var(--ease);
+    }
+    .band.active .band-panel { max-height: 260px; }
+    .band-content { grid-column: 3 / 4; padding: 0 0 38px; }
+    .band-content p { max-width: 590px; line-height: 1.75; color: var(--text-body); font-weight: 300; }
+    .value-list { margin-top: 24px; display: grid; gap: 10px; }
+    .value-list li {
+      list-style: none;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.26);
+    }
+    .value-list li::before { content: ""; display: inline-block; width: 5px; height: 5px; margin-right: 12px; background: rgba(255,255,255,.14); vertical-align: 1px; }
+    .value-list li:first-child::before { background: var(--accent); }
+
+    .lab { padding-top: 150px; }
+    .lab-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      border: 1px solid rgba(255,255,255,.055);
+      background: rgba(255,255,255,.055);
+    }
+    .tool-card {
+      min-height: 230px;
+      padding: 26px;
+      background: var(--black);
+      position: relative;
+      overflow: hidden;
+      transition: background .5s var(--ease);
+    }
+    .tool-card::after {
+      content: "";
+      position: absolute;
+      inset: auto 26px 24px auto;
+      width: 22px;
+      height: 22px;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 50%;
+      transition: border-color .5s var(--ease), transform .5s var(--ease);
+    }
+    .tool-card:hover { background: rgba(255,255,255,.018); }
+    .tool-card:hover::after { border-color: color-mix(in srgb, var(--tool-accent, var(--accent)) 46%, transparent); transform: scale(1.12); }
+    .tool-meta {
+      font-family: var(--font-mono);
+      font-size: 8.5px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--text-meta);
+    }
+    .tool-card h3 {
+      margin-top: 34px;
+      font-family: var(--font-display);
+      font-weight: 300;
+      font-size: 25px;
+      letter-spacing: -.045em;
+      line-height: 1.06;
+      color: rgba(255,255,255,.78);
+    }
+    .tool-card p {
+      margin-top: 18px;
+      max-width: 270px;
+      font-size: 14px;
+      line-height: 1.7;
+      color: rgba(255,255,255,.27);
+      font-weight: 300;
+    }
+
+    .contact { min-height: 58vh; display: grid; align-items: center; }
+    .contact-box { display: flex; flex-direction: column; align-items: flex-start; gap: 28px; }
+    .contact .mark { width: 22px; height: 22px; }
+    .contact h2 { max-width: 620px; }
+    .contact a.email {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.38);
+      transition: color .5s var(--ease);
+    }
+    .contact a.email:hover { color: var(--accent); }
+    footer {
+      padding: 30px var(--edge) 38px;
+      display: flex;
+      justify-content: space-between;
+      gap: 22px;
+      font-family: var(--font-mono);
+      font-size: 8px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--text-ghost);
+    }
+
+    @media (max-width: 860px) {
+      .navlinks { display: none; }
+      .breathing-grid { right: -210px; opacity: .56; }
+      .section-head { grid-template-columns: 1fr; gap: 18px; }
+      .band-button, .band-panel { grid-template-columns: 54px 1fr 32px; gap: 16px; }
+      .mini-geo { display: none; }
+      .band-title { grid-column: 2 / 3; }
+      .band-content { grid-column: 2 / 4; }
+      .lab-grid { grid-template-columns: 1fr; }
+      main section { padding: 92px var(--edge); }
+      footer { flex-direction: column; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav" aria-label="Primary navigation">
+    <a class="brand" href="#top" aria-label="Bridge Work home">
+      <svg class="mark" viewBox="0 0 100 100" aria-hidden="true"><rect x="5" y="5" width="43.5" height="43.5" rx="1.5" fill="#1a7a6d"/><rect x="51.5" y="5" width="43.5" height="43.5" rx="1.5" fill="#3d1f47"/><rect x="5" y="51.5" width="43.5" height="43.5" rx="1.5" fill="#3d1f47"/><path d="M51.5 95 Q51.5 51.5 95 51.5 L95 95 Z" fill="var(--accent)"/></svg>
+      <span class="wordmark">bridge-work<span>.ai</span></span>
+    </a>
+    <div class="navlinks">
+      <a href="#practice">Practice</a>
+      <a href="#lab">Lab</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
+
+  <header id="top" class="hero">
+    <svg class="breathing-grid" viewBox="0 0 404 404" aria-hidden="true">
+      <g transform="translate(0,0)" class="tile"><path d="M80 0 Q0 0 0 80 L80 80 Z" fill="#0a4a3f"/></g>
+      <g transform="translate(108,0)" class="tile"><rect width="80" height="80" rx="2" fill="#2a1433"/></g>
+      <g transform="translate(216,0)" class="tile"><path d="M0 0 Q80 0 80 80 Q0 80 0 0 Z" fill="#1a7a6d"/></g>
+      <g transform="translate(324,0)" class="tile"><path d="M0 80 Q0 0 80 0 L80 80 Z" fill="#0f5c52"/></g>
+      <g transform="translate(0,108)" class="tile"><ellipse cx="80" cy="40" rx="40" ry="40" fill="#2a1433"/></g>
+      <g transform="translate(108,108)" class="tile"><path d="M0 80 Q0 0 80 0 L80 80 Z" fill="#0a4a3f"/></g>
+      <g transform="translate(216,108)" class="tile"><circle cx="40" cy="40" r="35.2" fill="#c8c2b8"/></g>
+      <g transform="translate(324,108)" class="tile"><path d="M80 0 Q0 0 0 80 L80 80 Z" fill="#5a3068"/></g>
+      <g transform="translate(0,216)" class="tile"><rect width="80" height="80" rx="2" fill="#2a1433"/></g>
+      <g transform="translate(108,216)" class="tile"><path d="M80 0 Q0 0 0 80 Q80 80 80 0 Z" fill="#0a4a3f"/></g>
+      <g transform="translate(216,216)" class="tile"><path d="M80 80 Q0 80 0 0 L80 0 Z" fill="#1a7a6d"/></g>
+      <g transform="translate(324,216)" class="tile"><ellipse cx="40" cy="80" rx="40" ry="40" fill="#f0ebe3"/></g>
+      <g transform="translate(0,324)" class="tile"><path d="M0 0 Q80 0 80 80 L0 80 Z" fill="#2a1433"/></g>
+      <g transform="translate(108,324)" class="tile"><ellipse cx="40" cy="0" rx="40" ry="40" fill="#0a4a3f"/></g>
+      <g transform="translate(216,324)" class="tile"><path d="M0 0 Q80 0 80 80 Q0 80 0 0 Z" fill="#3d1f47"/></g>
+      <g transform="translate(324,324)" class="tile"><path d="M80 0 Q0 0 0 80 L80 80 Z" fill="#1a7a6d"/></g>
+    </svg>
+
+    <div class="hero-inner">
+      <p class="eyebrow">Swiss advisory & lab practice / AI adoption / governance translation</p>
+      <h1>
+        <span class="bright">Most organisations bought AI.</span><br>
+        <span class="dim">Few changed how work actually happens.</span>
+      </h1>
+      <p class="opener">Bridge Work helps public-sector and governance-aware organisations turn AI from scattered experimentation into real operational capability — by connecting strategy, governance, technology and the people who have to work with it.</p>
+      <div class="hero-actions">
+        <a class="link-button" href="#lab">Explore the lab <span aria-hidden="true">→</span></a>
+        <a class="quiet-link" href="mailto:achim.imboden@bridge-work.ai">Start a conversation</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="strip" aria-hidden="true">
+    <span style="background:#1a7a6d"></span><span style="background:#3d1f47"></span><span style="background:#0f5c52"></span><span style="background:#3d1f47"></span><span style="background:#1a7a6d"></span><span style="background:#5a3068"></span><span style="background:#0f5c52"></span><span style="background:#3d1f47"></span><span class="accent"></span><span style="background:#3d1f47"></span><span style="background:#1a7a6d"></span><span style="background:#0f5c52"></span><span style="background:#3d1f47"></span><span style="background:#0f5c52"></span>
+  </div>
+
+  <main>
+    <section id="practice">
+      <div class="section-inner">
+        <div class="section-head">
+          <p class="label">Practice</p>
+          <div>
+            <h2>AI adoption is not a tooling problem. <span>It is an operating model problem.</span></h2>
+            <p class="statement" style="margin-top:26px; max-width:680px;">Bridge Work works where AI ambition meets institutional reality: unclear ownership, sensitive data, risk decisions, fragmented knowledge, overloaded teams and the need for adoption that lasts.</p>
+          </div>
+        </div>
+
+        <div class="bands">
+          <article class="band active">
+            <button class="band-button" type="button" aria-expanded="true">
+              <span class="num">01</span>
+              <span class="mini-geo" aria-hidden="true"><svg viewBox="0 0 34 34"><path d="M0 34 Q0 0 34 0 L34 34 Z" fill="#1a7a6d"/></svg><svg viewBox="0 0 34 34"><path d="M0 0 Q34 0 34 34 Q0 34 0 0 Z" fill="#0f5c52"/></svg><svg viewBox="0 0 34 34"><path d="M34 0 Q0 0 0 34 L34 34 Z" fill="#3d1f47"/></svg></span>
+              <span class="band-title">AI Adoption Architecture</span>
+              <span class="plus">+</span>
+            </button>
+            <div class="band-panel">
+              <div class="band-content">
+                <p>Clarify where AI can create real value, what the organisation is ready for, which use cases make sense and what needs to be true before anything scales.</p>
+                <ul class="value-list"><li>Maturity and readiness mapping</li><li>Use-case framing and prioritisation</li><li>Roadmap, sponsorship and adoption design</li></ul>
+              </div>
+            </div>
+          </article>
+
+          <article class="band">
+            <button class="band-button" type="button" aria-expanded="false">
+              <span class="num">02</span>
+              <span class="mini-geo" aria-hidden="true"><svg viewBox="0 0 34 34"><path d="M34 0 Q0 0 0 34 Q34 34 34 0 Z" fill="#3d1f47"/></svg><svg viewBox="0 0 34 34"><circle cx="17" cy="17" r="15" fill="#f0ebe3"/></svg><svg viewBox="0 0 34 34"><path d="M34 34 Q0 34 0 0 L34 0 Z" fill="#1a7a6d"/></svg></span>
+              <span class="band-title">Governance Translation</span>
+              <span class="plus">+</span>
+            </button>
+            <div class="band-panel">
+              <div class="band-content">
+                <p>Turn policy, security, privacy, data ownership, auditability and access control into practical operating principles that people and systems can actually use.</p>
+                <ul class="value-list"><li>Policy-to-practice translation</li><li>Decision rights and review loops</li><li>M365 / Copilot / data governance readiness</li></ul>
+              </div>
+            </div>
+          </article>
+
+          <article class="band">
+            <button class="band-button" type="button" aria-expanded="false">
+              <span class="num">03</span>
+              <span class="mini-geo" aria-hidden="true"><svg viewBox="0 0 34 34"><ellipse cx="17" cy="34" rx="17" ry="17" fill="#0f5c52"/></svg><svg viewBox="0 0 34 34"><path d="M0 0 Q34 0 34 34 L0 34 Z" fill="#1a7a6d"/></svg><svg viewBox="0 0 34 34"><rect width="34" height="34" rx="2" fill="#3d1f47"/></svg></span>
+              <span class="band-title">Workforce Enablement</span>
+              <span class="plus">+</span>
+            </button>
+            <div class="band-panel">
+              <div class="band-content">
+                <p>Help leadership, transformation teams and internal communities build the shared language, rituals and confidence needed for responsible AI use in real workflows.</p>
+                <ul class="value-list"><li>Leadership briefings and community formats</li><li>Training journeys and adoption rituals</li><li>Measurement beyond vanity productivity metrics</li></ul>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <div class="strip" aria-hidden="true" style="opacity:.42">
+      <span style="background:#1a7a6d"></span><span style="background:#3d1f47"></span><span style="background:#0f5c52"></span><span style="background:#3d1f47"></span><span style="background:#1a7a6d"></span><span style="background:#5a3068"></span><span style="background:#0f5c52"></span><span style="background:#3d1f47"></span><span class="accent"></span><span style="background:#3d1f47"></span><span style="background:#1a7a6d"></span><span style="background:#0f5c52"></span><span style="background:#3d1f47"></span><span style="background:#0f5c52"></span>
+    </div>
+
+    <section id="lab" class="lab">
+      <div class="section-inner">
+        <div class="section-head">
+          <p class="label">Lab</p>
+          <div>
+            <h2>Small tools for serious organisational questions.</h2>
+            <p class="statement" style="margin-top:26px; max-width:700px;">The Lab turns abstract AI adoption and governance questions into tangible prototypes, canvases and decision tools. Not finished SaaS. Not theatre. Instruments that make invisible organisational questions visible.</p>
+          </div>
+        </div>
+
+        <div class="lab-grid">
+          <a class="tool-card" href="#contact" style="--tool-accent:#c48a2a">
+            <p class="tool-meta">Insight / diagnostic</p>
+            <h3>AI Readiness Check</h3>
+            <p>Map ambition, data, governance, enablement and operating-model maturity before scaling use cases.</p>
+          </a>
+          <a class="tool-card" href="#contact" style="--tool-accent:#8a5ac4">
+            <p class="tool-meta">Govern / canvas</p>
+            <h3>Governance Translation Canvas</h3>
+            <p>Turn abstract policies into decisions, controls, owners, review loops and usable guidance.</p>
+          </a>
+          <a class="tool-card" href="#contact" style="--tool-accent:#2a8fa0">
+            <p class="tool-meta">Connect / mapper</p>
+            <h3>M365 Readiness Mapper</h3>
+            <p>Inspect whether Teams, SharePoint, permissions, labels and knowledge structures are AI-ready.</p>
+          </a>
+          <a class="tool-card" href="#contact" style="--tool-accent:#c48a2a">
+            <p class="tool-meta">Insight / portfolio</p>
+            <h3>Use Case Discovery Board</h3>
+            <p>Rank use cases by value, risk, readiness and dependency before they become expensive experiments.</p>
+          </a>
+          <a class="tool-card" href="#contact" style="--tool-accent:#8a5ac4">
+            <p class="tool-meta">Govern / risk</p>
+            <h3>Dependency Risk Mapper</h3>
+            <p>Discuss vendor dependency, data location, reversibility, sovereignty and decision ownership without ideology.</p>
+          </a>
+          <a class="tool-card" href="#contact" style="--tool-accent:#2a8fa0">
+            <p class="tool-meta">Connect / enablement</p>
+            <h3>Enablement Journey Builder</h3>
+            <p>Shape briefings, trainings, community rituals and adoption measures around real organisational work.</p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="contact">
+      <div class="section-inner contact-box">
+        <svg class="mark" viewBox="0 0 100 100" aria-hidden="true"><rect x="5" y="5" width="43.5" height="43.5" rx="1.5" fill="#1a7a6d"/><rect x="51.5" y="5" width="43.5" height="43.5" rx="1.5" fill="#3d1f47"/><rect x="5" y="51.5" width="43.5" height="43.5" rx="1.5" fill="#3d1f47"/><path d="M51.5 95 Q51.5 51.5 95 51.5 L95 95 Z" fill="var(--accent)"/></svg>
+        <p class="label">Ready?</p>
+        <h2>Bring one real AI adoption question. We will turn it into something you can decide, test or govern.</h2>
+        <a class="email" href="mailto:achim.imboden@bridge-work.ai">achim.imboden@bridge-work.ai</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>© 2026 Bridge Work</span>
+    <span>Basel / Switzerland / AI adoption & governance translation</span>
+  </footer>
+
+  <script>
+    const bands = document.querySelectorAll('.band');
+    bands.forEach((band) => {
+      const button = band.querySelector('button');
+      button.addEventListener('click', () => {
+        const isActive = band.classList.contains('active');
+        bands.forEach((item) => {
+          item.classList.remove('active');
+          item.querySelector('button').setAttribute('aria-expanded', 'false');
+        });
+        if (!isActive) {
+          band.classList.add('active');
+          button.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
