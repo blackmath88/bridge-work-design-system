@@ -1,0 +1,15 @@
+{
+  "name": "bridge-work-design-system",
+  "type": "module",
+  "version": "1.3.0",
+  "description": "bridge-work.ai visual system — living documentation, pictogram registry, and canon. Built with Astro.",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "icons:check": "node scripts/validate-pictograms.mjs"
+  },
+  "dependencies": {
+    "astro": "^4.15.0"
+  }
+}

@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>bridge-work.ai — Pictogram System · Handover for M365 Onboarding</title>
+<link rel="icon" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="6" y="6" width="42" height="42" rx="6" fill="%231a7a6d"/><rect x="52" y="6" width="42" height="42" rx="6" fill="%233d1f47"/><rect x="6" y="52" width="42" height="42" rx="6" fill="%23c48a2a"/><path d="M52 94 Q52 52 94 52 L94 94 Z" fill="%23d4416b"/></svg>'>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fragment+Mono&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@300,400,500,600,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal:#1a7a6d;--teal-br:#23A595;--rose:#d4416b;--amber:#c48a2a;--cyan:#2a8fa0;--violet:#8a5ac4;
+  --black:#050505;--panel:#0d0d0e;--panel2:#121214;
+  --ink:#f0ebe3;--muted:rgba(240,235,227,.6);--faint:rgba(240,235,227,.38);
+  --border:rgba(240,235,227,.1);--border-l:rgba(240,235,227,.06);
+  --fd:'Switzer','Helvetica Neue',system-ui,sans-serif;--fm:'Fragment Mono',monospace;
+  --ease:cubic-bezier(.22,1,.36,1);--edge:clamp(20px,5vw,72px);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--ink);font-family:var(--fd);font-weight:300;line-height:1.65;-webkit-font-smoothing:antialiased}
+::selection{background:var(--teal);color:#fff}
+svg{display:block}
+button,textarea,input{font-family:inherit;color:inherit}
+code{font-family:var(--fm);font-size:.92em;background:rgba(240,235,227,.07);padding:1px 6px;border-radius:4px;color:var(--teal-br)}
+a{color:var(--teal-br)}
+
+.bar{position:sticky;top:0;z-index:100;background:rgba(5,5,5,.93);backdrop-filter:blur(24px);border-bottom:1px solid var(--border-l);padding:12px var(--edge);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:14px;letter-spacing:-.02em}
+.brand svg{width:20px;height:20px}
+.brand .v{color:var(--faint);font-weight:400}
+.bar .links{display:flex;gap:14px;flex-wrap:wrap}
+.bar .links a{font-family:var(--fm);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+.bar .links a:hover{color:var(--ink)}
+
+section{padding:60px var(--edge);border-bottom:1px solid var(--border-l);max-width:1300px;margin:0 auto}
+.kick{font-family:var(--fm);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--teal-br);display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.kick::before{content:"";width:10px;height:10px;border-radius:2px;background:var(--teal)}
+h1{font-weight:300;font-size:clamp(2rem,4.4vw,3.2rem);letter-spacing:-.04em;line-height:1.04}
+h2{font-weight:300;font-size:clamp(1.6rem,3vw,2.3rem);letter-spacing:-.03em;line-height:1.08}
+h3{font-weight:500;font-size:1.15rem;letter-spacing:-.015em;margin-top:30px}
+p.lead{color:var(--muted);margin-top:14px;font-size:15.5px;max-width:80ch}
+.note{margin-top:18px;padding:15px 18px;border-left:2px solid var(--teal);background:linear-gradient(90deg,rgba(26,122,109,.07),transparent);border-radius:0 8px 8px 0;font-size:14px;color:var(--muted);max-width:90ch}
+.note.amber{border-left-color:var(--amber);background:linear-gradient(90deg,rgba(196,138,42,.07),transparent)}
+.note.rose{border-left-color:var(--rose);background:linear-gradient(90deg,rgba(212,65,107,.07),transparent)}
+.note b{color:var(--ink);font-weight:500}
+
+.rulegrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:13px;margin-top:26px}
+.rc{border:1px solid var(--border);border-radius:11px;padding:17px 18px;background:rgba(255,255,255,.015)}
+.rc .n{font-family:var(--fm);font-size:9px;letter-spacing:.1em;color:var(--teal-br);text-transform:uppercase;margin-bottom:8px}
+.rc .b{font-weight:500;font-size:14px;margin-bottom:5px}
+.rc .d{color:var(--muted);font-size:12.5px;line-height:1.5}
+
+/* helper table */
+.helpers{margin-top:26px;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.hrow{display:grid;grid-template-columns:120px 1fr 132px;gap:18px;padding:15px 18px;border-bottom:1px solid var(--border-l);align-items:center}
+.hrow:last-child{border-bottom:none}
+.hrow:nth-child(odd){background:rgba(255,255,255,.012)}
+.hrow .fn{font-family:var(--fm);font-size:11.5px;color:var(--teal-br)}
+.hrow .ds{color:var(--muted);font-size:13px}
+.hrow .ds b{color:var(--ink);font-weight:500}
+.hrow .pv{width:60px;height:60px;justify-self:center;border:1px solid var(--border-l);border-radius:8px;padding:6px;background:rgba(255,255,255,.01)}
+.hrow .pv svg{width:100%;height:100%}
+
+/* starter grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(166px,1fr));gap:13px;margin-top:26px}
+.card{border:1px solid var(--border);border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.008));overflow:hidden;cursor:pointer;transition:border-color .25s,transform .35s var(--ease);position:relative}
+.card:hover{border-color:rgba(240,235,227,.2);transform:translateY(-2px)}
+.card .cv{aspect-ratio:1/.86;display:grid;place-items:center;border-bottom:1px solid var(--border-l)}
+.card .cv svg{width:60%;height:60%}
+.card .nm{padding:10px 12px 12px}
+.card .nm .t{font-weight:500;font-size:13px}
+.card .nm .h{font-size:11px;color:var(--faint);margin-top:3px;line-height:1.4}
+.card .copied{position:absolute;inset:0;display:grid;place-items:center;background:rgba(5,5,5,.82);font-family:var(--fm);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal-br);opacity:0;transition:.25s;pointer-events:none}
+.card.flash .copied{opacity:1}
+
+/* accent switch */
+.accents{display:flex;gap:8px;flex-wrap:wrap;margin-top:22px;align-items:center}
+.accents .lbl{font-family:var(--fm);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-right:4px}
+.ab{width:26px;height:26px;border-radius:7px;border:2px solid transparent;cursor:pointer;transition:.2s}
+.ab.on{border-color:var(--ink)}
+
+/* sandbox */
+.sand{display:grid;grid-template-columns:1fr 360px;gap:18px;margin-top:26px}
+@media(max-width:860px){.sand{grid-template-columns:1fr}}
+.sand textarea{width:100%;min-height:340px;background:#08080a;border:1px solid var(--border);border-radius:12px;color:var(--ink);font-family:var(--fm);font-size:12.5px;line-height:1.6;padding:16px;resize:vertical;outline:none;tab-size:2}
+.sand textarea:focus{border-color:var(--teal)}
+.preview{border:1px solid var(--border);border-radius:12px;padding:18px;background:rgba(255,255,255,.012);display:flex;flex-direction:column;gap:16px}
+.preview .big{aspect-ratio:1;border:1px solid var(--border-l);border-radius:10px;display:grid;place-items:center;background:radial-gradient(120% 110% at 50% 25%,rgba(26,122,109,.06),transparent 60%)}
+.preview .big svg{width:62%;height:62%}
+.preview .sizes{display:flex;gap:18px;align-items:flex-end;justify-content:center}
+.preview .sz{display:flex;flex-direction:column;align-items:center;gap:6px}
+.preview .sz .l{font-family:var(--fm);font-size:8px;color:var(--faint);letter-spacing:.1em}
+.preview .err{font-family:var(--fm);font-size:11px;color:var(--rose);min-height:16px}
+.preview .act{display:flex;gap:8px}
+.preview .act button{flex:1;font-family:var(--fm);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;padding:9px 0;border-radius:7px;border:1px solid var(--border);background:transparent;cursor:pointer}
+.preview .act button.primary{background:var(--teal);border-color:var(--teal);color:#fff}
+
+ol.steps{margin:22px 0 0;padding-left:0;list-style:none;display:grid;gap:10px;max-width:90ch}
+ol.steps li{display:flex;gap:13px;padding:13px 16px;border:1px solid var(--border);border-radius:9px;background:rgba(255,255,255,.015);font-size:14px}
+ol.steps li .nx{font-family:var(--fm);color:var(--teal-br);flex-shrink:0}
+ol.steps b{font-weight:500}
+
+#toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,14px);z-index:300;background:var(--panel);border:1px solid var(--border);font-family:var(--fm);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:10px 16px;border-radius:7px;opacity:0;pointer-events:none;transition:.25s var(--ease)}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+footer{padding:40px var(--edge) 80px;text-align:center;font-family:var(--fm);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <div class="brand">
+    <svg viewBox="0 0 100 100"><rect x="6" y="6" width="42" height="42" rx="3" fill="#1a7a6d"/><rect x="52" y="6" width="42" height="42" rx="3" fill="#3d1f47"/><rect x="6" y="52" width="42" height="42" rx="3" fill="#c48a2a"/><path d="M52 94 Q52 52 94 52 L94 94 Z" fill="#d4416b"/></svg>
+    bridge·work <span class="v">· pictogram handover</span>
+  </div>
+  <div class="links">
+    <a href="#rules">rules</a><a href="#toolkit">toolkit</a><a href="#starter">M365 set</a><a href="#sandbox">sandbox</a><a href="#brief">how to extend</a>
+  </div>
+</div>
+
+<section>
+  <div class="kick">Handover · canon v1.3 · for the M365 onboarding tool</div>
+  <h1>The bridge-work pictogram system — portable.</h1>
+  <p class="lead">This single file carries everything the M365 onboarding chat needs to draw new pictograms <b style="color:var(--ink);font-weight:500">in-style, without re-deriving the system</b>: the construction rules, the helper toolkit (copy it into that project), a starter set already drawn for onboarding, and a live sandbox to build and size-test new marks. Tap any pictogram to copy its SVG.</p>
+  <div class="note amber"><b>For the other chat:</b> read §Rules and §Toolkit first, paste the toolkit block into your project, then use the §Sandbox to draw. Every new mark must pass the five checks in §How to extend before it ships.</div>
+</section>
+
+<!-- RULES -->
+<section id="rules">
+  <div class="kick">The construction rules</div>
+  <h2>Eight rules. No exceptions.</h2>
+  <p class="lead">Otl Aicher's discipline married to the bridge-work grammar. The rules are what make a new mark belong without anyone art-directing it.</p>
+  <div class="rulegrid">
+    <div class="rc"><div class="n">01 · angles</div><div class="b">0° / 45° / 90° only</div><div class="d">Every stroke is horizontal, vertical, or a true diagonal. No other angles exist in the language.</div></div>
+    <div class="rc"><div class="n">02 · weight</div><div class="b">Uniform bold, round caps</div><div class="d">One stroke width across the whole mark (7 on a 120 grid). Round line caps, always.</div></div>
+    <div class="rc"><div class="n">03 · colour</div><div class="b">Teal structure</div><div class="d">All stroked structure is teal. Geometry is never ink, grey, or white. This is law.</div></div>
+    <div class="rc"><div class="n">04 · curves</div><div class="b">Curvature never stroked</div><div class="d">The signature rule. Curves enter <b>only</b> as filled forms — a solid disc, a filled quarter-arc, a filled leaf. Aicher curved his strokes; we never do.</div></div>
+    <div class="rc"><div class="n">05 · accent</div><div class="b">One solid accent</div><div class="d">Exactly one filled accent element = the <b>activated</b> thing (the engaged user, the current step, the signal). Amber by default; see §accent.</div></div>
+    <div class="rc"><div class="n">06 · meaning</div><div class="b">The name-it test</div><div class="d">A viewer must be able to say what it depicts. If they can't, it's ornament — and ornament never sits where an icon belongs.</div></div>
+    <div class="rc"><div class="n">07 · UI glyphs</div><div class="b">May be stroke-only</div><div class="d">Pure interface glyphs (close, plus, menu chevrons) have nothing "activated" — they may omit the accent and be stroke-only.</div></div>
+    <div class="rc"><div class="n">08 · arrows</div><div class="b">No triangle heads</div><div class="d">The triangle isn't in the alphabet. A bridge-work arrow is a stroke ending in a <b>solid destination disc</b> — movement toward the signal.</div></div>
+  </div>
+  <div class="accents" id="accentRow">
+    <span class="lbl">Accent (structure stays teal):</span>
+  </div>
+  <div class="note"><b>Context-accent rule:</b> structure is always teal; the one accent takes the context colour. <b>Amber</b> = public / default · <b>cyan</b> = connect-flavoured · <b>violet</b> = govern-flavoured · <b>rose</b> = never (semantic/earned only, reserved for the Signal Mark and true "active" states). For an M365 onboarding tool, amber is the safe default; use cyan if you want a "collaboration/connect" feel. Switch the swatch above to recolour every mark on this page.</div>
+</section>
+
+<!-- TOOLKIT -->
+<section id="toolkit">
+  <div class="kick">The helper toolkit · copy this into your project</div>
+  <h2>The shape factory.</h2>
+  <p class="lead">Nine functions generate every mark. Strokes for structure (teal), fills for accents. Drop this block into the onboarding project and you can compose any pictogram from these primitives. Each row shows the function and a live example of what it draws.</p>
+  <div class="helpers" id="helpers"></div>
+  <h3>Copy-paste block</h3>
+  <p class="lead">This is the exact toolkit — viewBox is <code>0 0 120 120</code>, stroke width <code>7</code>, accent variable <code>A</code>:</p>
+  <div class="sand" style="grid-template-columns:1fr">
+    <textarea id="toolkitCode" readonly></textarea>
+  </div>
+  <div class="preview act" style="border:none;padding:0;margin-top:10px;flex-direction:row;display:flex;gap:8px;max-width:300px">
+    <button class="primary" id="copyToolkit" style="font-family:var(--fm);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;padding:10px 16px;border-radius:7px;border:1px solid var(--teal);background:var(--teal);color:#fff;cursor:pointer">Copy toolkit</button>
+  </div>
+</section>
+
+<!-- STARTER SET -->
+<section id="starter">
+  <div class="kick">Starter set · drawn for M365 onboarding</div>
+  <h2>Eighteen marks to begin with.</h2>
+  <p class="lead">Already in-style and onboarding-relevant — account, mailbox, Teams, SharePoint, OneDrive, first sign-in, MFA, profile setup, and the journey-step markers. Tap to copy SVG. Extend from here in the sandbox.</p>
+  <div class="grid" id="starterGrid"></div>
+</section>
+
+<!-- SANDBOX -->
+<section id="sandbox">
+  <div class="kick">Live sandbox · build &amp; size-test</div>
+  <h2>Draw a new mark.</h2>
+  <p class="lead">Edit the array of helper calls. It renders live at full size and at 24&nbsp;px — <b style="color:var(--ink);font-weight:500">if it dies at 24px it isn't done.</b> The grid overlay helps you keep endpoints on the 0/45/90 structure.</p>
+  <div class="sand">
+    <textarea id="sandCode">// one mark = an array of helper calls.
+// structure = teal strokes · ONE solid accent (A)
+[
+  PR(30,16,60,78),        // a sheet (container)
+  PL(44,38,76,38),        // line
+  PL(44,54,76,54),        // line
+  PL(44,70,64,70),        // line
+  D(40,4,22)              // solid accent = the active record
+]</textarea>
+    <div class="preview">
+      <div class="big" id="sandBig"></div>
+      <div class="sizes">
+        <div class="sz"><div id="sand48" style="width:48px;height:48px"></div><div class="l">48px</div></div>
+        <div class="sz"><div id="sand24" style="width:24px;height:24px"></div><div class="l">24px</div></div>
+      </div>
+      <div class="err" id="sandErr"></div>
+      <div class="act">
+        <button id="sandGrid">grid</button>
+        <button class="primary" id="sandCopy">copy svg</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BRIEF -->
+<section id="brief">
+  <div class="kick">How to extend · the checklist</div>
+  <h2>Every new mark, five checks.</h2>
+  <ol class="steps">
+    <li><span class="nx">1</span><div><b>Name it in one word</b> before drawing. If you can't, it's not a pictogram. Decide the <b>one activated element</b> — that becomes the single solid accent.</div></li>
+    <li><span class="nx">2</span><div><b>Build structure from strokes</b> at 0/45/90 only, teal, weight 7, round caps. Containers = stroked rects/lines. Keep endpoints on a mental grid.</div></li>
+    <li><span class="nx">3</span><div><b>Add curves only as fills</b> — disc (<code>D</code>), quarter-arc (<code>ARC</code>), or leaf (<code>LF</code>). Never a stroked curve. A round corner radius on a rect is fine; a curved <i>line</i> is not.</div></li>
+    <li><span class="nx">4</span><div><b>One accent, context colour.</b> Amber default. The accent marks what's active/engaged/current — never decorative, never two.</div></li>
+    <li><span class="nx">5</span><div><b>Size-test at 24px.</b> If strokes merge or it becomes unreadable, simplify — fewer elements, larger gaps. Then run the <b>name-it test</b> on a fresh pair of eyes.</div></li>
+  </ol>
+  <div class="note rose"><b>Hard limits (never):</b> no stroked curves · no triangle arrowheads · no ink/grey/white geometry · no second accent colour in one mark · no 2×2 of four solid squares (that's the Signal Mark's exclusive signature) · rose accent only for genuine "earned/active" states, not decoration.</div>
+  <div class="note"><b>When in doubt, copy a neighbour.</b> The starter set covers most onboarding needs; a new mark is usually a small edit of an existing one (mailbox → calendar, person → person-with-badge). Reuse the composition logic.</div>
+</section>
+
+<div id="toast">copied ✓</div>
+<footer>bridge-work.ai · pictogram system · canon v1.3 · portable handover · structure teal · one accent · curves filled-only</footer>
+
+<script>
+'use strict';
+let ACCENT='#c48a2a'; // amber default
+const T='#1a7a6d';
+
+/* ===== THE TOOLKIT (also shown as copy-paste text below) ===== */
+const PL=(x1,y1,x2,y2)=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${T}" stroke-width="7" stroke-linecap="round"/>`;
+const PC=(x,y,d)=>`<circle cx="${x+d/2}" cy="${y+d/2}" r="${d*.46}" fill="none" stroke="${T}" stroke-width="7"/>`;
+const PR=(x,y,w,h)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="none" stroke="${T}" stroke-width="7"/>`;
+const PP=(pts)=>`<polyline points="${pts}" fill="none" stroke="${T}" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>`;
+const D=(x,y,d,c)=>`<circle cx="${x+d/2}" cy="${y+d/2}" r="${d/2}" fill="${c||ACCENT}"/>`;
+const SQ=(x,y,s,c,rot)=>`<rect x="${x}" y="${y}" width="${s}" height="${s}" rx="${Math.max(2,s*.14)}" fill="${c||ACCENT}"${rot?` transform="rotate(${rot} ${x+s/2} ${y+s/2})"`:''}/>`;
+const ARC=(x,y,s,c)=>`<path d="M${x} ${y+s} Q${x} ${y} ${x+s} ${y} L${x+s} ${y+s} Z" fill="${c||ACCENT}"/>`;
+const LF=(x,y,s,c)=>`<path d="M${x} ${y} Q${x+s} ${y} ${x+s} ${y+s} Q${x} ${y+s} ${x} ${y} Z" fill="${c||ACCENT}"/>`;
+const HALF=(x,y,s,c)=>`<path d="M${x} ${y+s/2} A${s/2} ${s/2} 0 0 1 ${x+s} ${y+s/2} Z" fill="${c||ACCENT}"/>`;
+const wrap=(parts)=>`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">${parts.join('')}</svg>`;
+
+/* toolkit text for copy block */
+const TOOLKIT_TEXT=`// bridge-work pictogram toolkit · canon v1.3
+// viewBox 0 0 120 120 · stroke 7 · structure teal · ONE accent
+const T='#1a7a6d';            // structure (always teal)
+let   A='#c48a2a';            // accent: amber default · cyan connect · violet govern · never rose
+
+// STRUCTURE (stroked, teal) — straight lines only, 0/45/90
+const PL=(x1,y1,x2,y2)=>\`<line x1="\${x1}" y1="\${y1}" x2="\${x2}" y2="\${y2}" stroke="\${T}" stroke-width="7" stroke-linecap="round"/>\`;
+const PC=(x,y,d)=>\`<circle cx="\${x+d/2}" cy="\${y+d/2}" r="\${d*.46}" fill="none" stroke="\${T}" stroke-width="7"/>\`;   // stroked ring (circles MAY be stroked)
+const PR=(x,y,w,h)=>\`<rect x="\${x}" y="\${y}" width="\${w}" height="\${h}" rx="6" fill="none" stroke="\${T}" stroke-width="7"/>\`;
+const PP=(pts)=>\`<polyline points="\${pts}" fill="none" stroke="\${T}" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>\`;
+
+// ACCENT (filled) — curves enter ONLY here
+const D=(x,y,d,c)=>\`<circle cx="\${x+d/2}" cy="\${y+d/2}" r="\${d/2}" fill="\${c||A}"/>\`;          // solid disc (the signal)
+const SQ=(x,y,s,c,rot)=>\`<rect x="\${x}" y="\${y}" width="\${s}" height="\${s}" rx="\${Math.max(2,s*.14)}" fill="\${c||A}"\${rot?\` transform="rotate(\${rot} \${x+s/2} \${y+s/2})"\`:''}/>\`;
+const ARC=(x,y,s,c)=>\`<path d="M\${x} \${y+s} Q\${x} \${y} \${x+s} \${y} L\${x+s} \${y+s} Z" fill="\${c||A}"/>\`;   // filled quarter-arc (the transition)
+const LF=(x,y,s,c)=>\`<path d="M\${x} \${y} Q\${x+s} \${y} \${x+s} \${y+s} Q\${x} \${y+s} \${x} \${y} Z" fill="\${c||A}"/>\`;        // filled leaf (the join)
+const HALF=(x,y,s,c)=>\`<path d="M\${x} \${y+s/2} A\${s/2} \${s/2} 0 0 1 \${x+s} \${y+s/2} Z" fill="\${c||A}"/>\`;   // filled half-disc (threshold)
+
+const wrap=(parts)=>\`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">\${parts.join('')}</svg>\`;
+
+// a mark = wrap([ ...helper calls... ]);  one solid accent only.`;
+document.getElementById('toolkitCode').value=TOOLKIT_TEXT;
+
+/* ===== helper reference rows ===== */
+const HELP=[
+ ['PL(x1,y1,x2,y2)','<b>Line</b> — straight structure, 0/45/90 only.',[PL(20,20,100,100)]],
+ ['PC(x,y,d)','<b>Ring</b> — stroked circle (circles may be stroked).',[PC(24,24,72)]],
+ ['PR(x,y,w,h)','<b>Rect</b> — stroked container.',[PR(22,30,76,60)]],
+ ['PP(points)','<b>Polyline</b> — connected strokes (paths, charts).',[PP('20,90 50,50 70,70 100,30')]],
+ ['D(x,y,d)','<b>Disc</b> — solid accent · the signal.',[PC(24,24,72),D(46,46,28)]],
+ ['SQ(x,y,s,rot)','<b>Square</b> — solid accent · the container/tile.',[PR(20,20,80,80),SQ(40,40,40,null,0)]],
+ ['ARC(x,y,s)','<b>Quarter-arc</b> — solid accent · the transition.',[PR(18,18,84,84),ARC(40,40,44)]],
+ ['LF(x,y,s)','<b>Leaf</b> — solid accent · the join.',[PC(14,40,44),PC(64,40,44),LF(50,52,20)]],
+ ['HALF(x,y,s)','<b>Half-disc</b> — solid accent · the threshold.',[PR(20,40,80,8),HALF(40,40,40)]]
+];
+function renderHelpers(){
+  const host=document.getElementById('helpers');host.innerHTML='';
+  HELP.forEach(([fn,ds,parts])=>{
+    const r=document.createElement('div');r.className='hrow';
+    r.innerHTML=`<div class="fn">${fn}</div><div class="ds">${ds}</div><div class="pv">${wrap(parts)}</div>`;
+    host.appendChild(r);
+  });
+}
+
+/* ===== starter set ===== */
+function starterDefs(){return [
+ ['account','Person + the activated badge.',[PC(38,8,22),PL(49,32,49,58),PL(49,40,33,56),PL(49,40,65,56),PL(49,58,37,76),PL(49,58,61,76),PR(66,62,38,38),D(76,72,18)]],
+ ['mailbox','Envelope; the new message solid.',[PR(16,28,88,64),PL(16,30,60,72),PL(104,30,60,72),D(52,74,16)]],
+ ['teams','Three people; the active member solid.',[PC(8,30,26),D(44,24,30),PC(82,30,26),PL(10,72,36,72),PL(46,78,74,78),PL(84,72,110,72)]],
+ ['sharepoint','Shared library; the live doc marked.',[PR(20,16,52,80),PR(40,30,52,80),D(58,46,18),PL(50,64,80,64),PL(50,80,80,80)]],
+ ['onedrive','Files in the container; one synced.',[PR(18,30,84,66),PL(18,30,18,18),PL(18,18,46,18),PL(46,18,54,30),D(50,52,20)]],
+ ['signin','Door + arrow in, to the solid destination.',[PR(54,16,46,88),PL(16,60,68,60),D(56,46,28),PL(40,44,56,60),PL(40,76,56,60)]],
+ ['mfa','Device + the verifying check.',[PR(36,10,48,100),PL(50,20,70,20),PL(45,64,55,74),PL(55,74,75,50),D(48,86,12)]],
+ ['password','Square-shackle lock; secret solid.',[PR(26,54,68,50),PL(38,54,38,30),PL(82,54,82,30),PL(38,30,82,30),D(50,68,20)]],
+ ['profile','Bust; the head solid.',[D(46,12,28),PL(24,98,46,76),PL(96,98,74,76),PL(46,76,74,76)]],
+ ['calendar','First day marked.',[PR(18,26,84,74),PL(38,14,38,34),PL(82,14,82,34),PL(18,50,102,50),SQ(34,60,18)]],
+ ['install','Down onto the device — destination disc.',[PL(60,12,60,56),D(46,54,28),PR(28,84,64,28)]],
+ ['permissions','Key fits the role.',[PC(8,30,46),PL(54,53,104,53),PL(82,53,82,70),PL(100,53,100,70),D(25,47,14)]],
+ ['training','Board on a stand; one tile active.',[PR(20,16,80,54),PL(46,70,32,96),PL(74,70,88,96),SQ(32,28,16),PR(56,28,16,16)]],
+ ['checklist','Onboarding steps; the open one signalled.',[PR(20,10,80,100),PP('32,34 40,42 54,24'),PL(62,34,88,34),PP('32,62 40,70 54,52'),PL(62,62,88,62),D(33,82,14),PL(62,90,88,90)]],
+ ['support','Speech bubble + the helping signal.',[PR(16,20,84,56),PL(40,76,40,98),PL(40,98,60,76),D(34,40,16),PL(58,48,82,48)]],
+ ['welcome','Open door, threshold lit.',[PR(34,16,52,88),HALF(46,40,28),PL(20,104,100,104)]],
+ ['step','A numbered journey node (current).',[PC(24,24,72),D(46,46,28)]],
+ ['done','Completed step — check at the vertex.',[PC(18,18,84),PP('38,62 54,78 84,40'),D(47,60,16)]]
+];}
+
+/* render starter + helpers (re-run on accent change) */
+const starterGrid=document.getElementById('starterGrid');
+function renderStarter(){
+  starterGrid.innerHTML='';
+  starterDefs().forEach(([name,hint,parts])=>{
+    const c=document.createElement('div');c.className='card';
+    c.innerHTML=`<div class="cv">${wrap(parts)}</div><div class="nm"><div class="t">${name}</div><div class="h">${hint}</div></div><div class="copied">SVG copied ✓</div>`;
+    c.querySelector('.cv').addEventListener('click',()=>{
+      navigator.clipboard.writeText(wrap(parts)).then(()=>{c.classList.add('flash');setTimeout(()=>c.classList.remove('flash'),900);toast('SVG copied')});
+    });
+    starterGrid.appendChild(c);
+  });
+}
+
+/* ===== accent switch ===== */
+const ACCENTS=[['amber','#c48a2a'],['cyan','#2a8fa0'],['violet','#8a5ac4']];
+(function(){
+  const row=document.getElementById('accentRow');
+  ACCENTS.forEach(([name,hex],i)=>{
+    const b=document.createElement('button');b.className='ab'+(i===0?' on':'');b.style.background=hex;b.title=name;
+    b.addEventListener('click',()=>{
+      ACCENT=hex;
+      row.querySelectorAll('.ab').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+      renderHelpers();renderStarter();runSandbox();
+    });
+    row.appendChild(b);
+  });
+})();
+
+/* ===== sandbox ===== */
+const sandCode=document.getElementById('sandCode');
+let showGrid=false;
+function gridOverlay(){
+  if(!showGrid)return '';
+  let g='';for(let i=0;i<=120;i+=15){const o=i%30===0?.18:.08;g+=`<line x1="${i}" y1="0" x2="${i}" y2="120" stroke="#f0ebe3" stroke-opacity="${o}" stroke-width=".5"/><line x1="0" y1="${i}" x2="120" y2="${i}" stroke="#f0ebe3" stroke-opacity="${o}" stroke-width=".5"/>`;}
+  g+=`<line x1="0" y1="0" x2="120" y2="120" stroke="#1a7a6d" stroke-opacity=".15" stroke-width=".5"/><line x1="120" y1="0" x2="0" y2="120" stroke="#1a7a6d" stroke-opacity=".15" stroke-width=".5"/>`;
+  return g;
+}
+function runSandbox(){
+  const err=document.getElementById('sandErr');
+  try{
+    const parts=eval(sandCode.value);
+    if(!Array.isArray(parts))throw new Error('must be an array of helper calls');
+    const inner=parts.join('');
+    const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">${gridOverlay()}${inner}</svg>`;
+    const clean=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">${inner}</svg>`;
+    document.getElementById('sandBig').innerHTML=svg;
+    document.getElementById('sand48').innerHTML=clean;
+    document.getElementById('sand24').innerHTML=clean;
+    document.getElementById('sand48').querySelector('svg').style.cssText='width:100%;height:100%';
+    document.getElementById('sand24').querySelector('svg').style.cssText='width:100%;height:100%';
+    document.getElementById('sandBig').querySelector('svg').style.cssText='width:62%;height:62%';
+    err.textContent='';
+    window.__lastClean=clean;
+  }catch(e){err.textContent='⚠ '+e.message;}
+}
+sandCode.addEventListener('input',runSandbox);
+document.getElementById('sandGrid').addEventListener('click',()=>{showGrid=!showGrid;runSandbox()});
+document.getElementById('sandCopy').addEventListener('click',()=>{
+  if(window.__lastClean){navigator.clipboard.writeText(window.__lastClean);toast('SVG copied')}
+});
+
+/* ===== copy toolkit + toast ===== */
+document.getElementById('copyToolkit').addEventListener('click',()=>{
+  navigator.clipboard.writeText(TOOLKIT_TEXT);toast('toolkit copied');
+});
+const toastEl=document.getElementById('toast');let tId;
+function toast(msg){toastEl.textContent=msg;toastEl.classList.add('show');clearTimeout(tId);tId=setTimeout(()=>toastEl.classList.remove('show'),1300)}
+
+/* init */
+renderHelpers();renderStarter();runSandbox();
+</script>
+</body>
+</html>

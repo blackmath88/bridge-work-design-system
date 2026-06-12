@@ -1,0 +1,47 @@
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-weight:300;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--teal);color:#fff}
+a{color:inherit;text-decoration:none}
+svg{display:block}
+code{font-family:var(--font-mono);font-size:.9em;background:rgba(240,235,227,.07);padding:1px 6px;border-radius:4px;color:var(--teal-txt)}
+
+.nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:13px var(--edge);background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(24px);border-bottom:1px solid var(--border-l)}
+.nav .brand{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-weight:600;font-size:14px;letter-spacing:-.02em}
+.nav .brand svg{width:20px;height:20px}
+.nav .brand em{color:var(--faint);font-style:normal;font-weight:400}
+.nav .links{display:flex;gap:18px;flex-wrap:wrap}
+.nav .links a{font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);transition:color var(--dur-med) var(--ease-ui)}
+.nav .links a:hover,.nav .links a.active{color:var(--ink)}
+.nav .links a.active{color:var(--teal-txt)}
+
+main{min-height:60vh}
+section{padding:56px var(--edge);border-bottom:1px solid var(--border-l);max-width:1300px;margin:0 auto}
+.kick{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--teal-txt);display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.kick::before{content:"";width:10px;height:10px;border-radius:2px;background:var(--teal)}
+h1{font-family:var(--font-display);font-weight:300;font-size:clamp(2rem,4.4vw,3.4rem);letter-spacing:-.04em;line-height:1.04}
+h2{font-family:var(--font-display);font-weight:300;font-size:clamp(1.6rem,3vw,2.3rem);letter-spacing:-.03em;line-height:1.1}
+h3{font-family:var(--font-display);font-weight:500;font-size:1.15rem;letter-spacing:-.015em;margin-top:28px}
+p.lead{color:var(--muted);margin-top:14px;font-size:15.5px;max-width:80ch}
+.note{margin-top:18px;padding:15px 18px;border-left:2px solid var(--teal);background:linear-gradient(90deg,rgba(26,122,109,.07),transparent);border-radius:0 8px 8px 0;font-size:14px;color:var(--muted);max-width:90ch}
+.note b{color:var(--ink);font-weight:500}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-top:30px}
+.tile{border:1px solid var(--border);border-radius:13px;background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.008));padding:24px;transition:border-color var(--dur-med),transform var(--dur-slow) var(--ease);display:block}
+.tile:hover{border-color:rgba(240,235,227,.2);transform:translateY(-3px)}
+.tile .ti{font-family:var(--font-mono);font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--teal-txt);margin-bottom:12px}
+.tile h3{margin-top:0;font-size:1.25rem}
+.tile p{color:var(--muted);font-size:13.5px;margin-top:8px;line-height:1.55}
+
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:24px}
+.pcell{border:1px solid var(--border);border-radius:11px;overflow:hidden;background:linear-gradient(180deg,rgba(255,255,255,.022),rgba(255,255,255,.006))}
+.pcell .cv{aspect-ratio:1/.82;display:grid;place-items:center;border-bottom:1px solid var(--border-l)}
+.pcell .nm{padding:9px 11px}
+.pcell .nm .t{font-weight:500;font-size:12.5px}
+.pcell .nm .h{font-size:10.5px;color:var(--faint);margin-top:3px;line-height:1.4}
+.cathead{font-family:var(--font-mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--teal-txt);margin:38px 0 2px;display:flex;align-items:center;gap:10px}
+.cathead::after{content:"";flex:1;height:1px;background:var(--border-l)}
+
+footer{padding:40px var(--edge) 70px;text-align:center;font-family:var(--font-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}

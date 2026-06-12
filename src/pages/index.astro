@@ -1,0 +1,49 @@
+---
+import Base from '@/layouts/Base.astro';
+import Pictogram from '@/components/Pictogram.astro';
+import { PICTOGRAMS } from '@/data/pictograms.mjs';
+const sample = ['architecture','translate','shield','spark','workshop','lock','team','lab'];
+---
+<Base title="bridge-work.ai — Visual System">
+  <section>
+    <div class="kick">Living documentation · canon v1.3</div>
+    <h1>The bridge-work visual system.</h1>
+    <p class="lead">One grammar, three registers, a pictogram language, and the canon that governs them. This repo is both the documentation and the source of truth — the pictograms here are the same component the site and tools import.</p>
+    <div class="cards">
+      <a class="tile" href="/system/">
+        <div class="ti">01 · Brand identity &amp; system</div>
+        <h3>The canon</h3>
+        <p>Principle, primitives, the Signal Mark, palette, registers, the Joint Principle, motion, web parts, and the laws — shown live.</p>
+      </a>
+      <a class="tile" href="/pictograms/">
+        <div class="ti">02 · Meaning register</div>
+        <h3>Pictogram library</h3>
+        <p>{PICTOGRAMS.length} marks on the Aicher construction rules, backed by a typed registry. Copy SVG, or import the component.</p>
+      </a>
+      <a class="tile" href="/intel/">
+        <div class="ti">03 · Process intel</div>
+        <h3>Webcraft playbook</h3>
+        <p>What produced the strong build rounds — the choreography, interaction, and design-system defaults, written portable.</p>
+      </a>
+      <a class="tile" href="/system/prototype/">
+        <div class="ti">04 · Reference build</div>
+        <h3>Index prototype</h3>
+        <p>The canonical landing-page prototype the system is derived from — embedded and annotated.</p>
+      </a>
+    </div>
+  </section>
+
+  <section>
+    <div class="kick">The pictogram language</div>
+    <h2>Drawn once. Used everywhere.</h2>
+    <p class="lead">Every mark below is <code>&lt;Pictogram id="…" /&gt;</code> — rendered at build time to inline SVG, zero runtime JS. Change the registry, every surface updates.</p>
+    <div class="pgrid" style="margin-top:26px">
+      {sample.map(id => (
+        <div class="pcell">
+          <div class="cv"><Pictogram id={id} size={64} /></div>
+          <div class="nm"><div class="t">{id}</div></div>
+        </div>
+      ))}
+    </div>
+  </section>
+</Base>

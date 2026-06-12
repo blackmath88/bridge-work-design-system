@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>bridge-work.ai — AI adoption & governance translation</title>
+<meta name="description" content="bridge-work turns AI from scattered experiments into real operating capability for governance-sensitive organisations.">
+<link rel="icon" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="6" y="6" width="42" height="42" rx="6" fill="%231a7a6d"/><rect x="52" y="6" width="42" height="42" rx="6" fill="%233d1f47"/><rect x="6" y="52" width="42" height="42" rx="6" fill="%23c48a2a"/><path d="M52 94 Q52 52 94 52 L94 94 Z" fill="%23d4416b"/></svg>'>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fragment+Mono&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@300,400,500,600,700&display=swap" rel="stylesheet">
+<!-- production note: self-host both families (GDPR — no CDN hot-linking for a governance practice) -->
+<style>
+/* ================= CANON TOKENS ================= */
+:root{
+  --teal:#1a7a6d; --teal-br:#23A595; --teal-dark:#0f5c52; --teal-deep:#0a4a3f;
+  --purple:#3d1f47; --purple-mid:#5a3068; --violet:#6e43a7;
+  --rose:#d4416b; --amber:#c48a2a; --gold:#b78100;
+  --display:'Switzer','Helvetica Neue',system-ui,sans-serif;
+  --body:'Switzer','Helvetica Neue',system-ui,sans-serif;
+  --mono:'Fragment Mono',monospace;
+  --ease:cubic-bezier(.22,1,.36,1);
+  --ease-ui:cubic-bezier(0,0,.2,1);
+  --dur-fast:100ms; --dur-med:250ms; --dur-slow:450ms;
+  --edge:clamp(22px,5.5vw,84px);
+}
+[data-theme="dark"]{
+  --bg:#050505; --surface:#0b0b0c; --panel:#0d0d0e;
+  --ink:#f0ebe3; --ink-s:rgba(240,235,227,.6); --ink-t:rgba(240,235,227,.38); --ink-ghost:rgba(240,235,227,.2);
+  --border:rgba(240,235,227,.11); --border-l:rgba(240,235,227,.06);
+  --teal-txt:#23A595;
+  --feat-h:#fff; --feat-p:rgba(255,255,255,.7); --grid-line:rgba(240,235,227,.05);
+  --cell:#0b0b0c; --cell-hover:#101013; --cell-h:#fff; --cell-p:rgba(255,255,255,.58);
+  --email-bg:#f0ebe3; --email-tx:#0a0a0a;
+}
+[data-theme="light"]{
+  --bg:#f0ebe3; --surface:#fff; --panel:#e9e3d8;
+  --ink:#1d1d1f; --ink-s:#5e5e63; --ink-t:#90908f; --ink-ghost:rgba(29,29,31,.2);
+  --border:#ddd5c6; --border-l:#e7e0d3;
+  --teal-txt:#147567;
+  --feat-h:#1d1d1f; --feat-p:#5e5e63; --grid-line:rgba(29,29,31,.05);
+  --cell:#fbf9f5; --cell-hover:#fff; --cell-h:#1d1d1f; --cell-p:#5e5e63;
+  --email-bg:#0a0a0a; --email-tx:#fff;
+}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.5s;animation-timing-function:var(--ease)}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-weight:300;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--teal);color:#fff}
+a{color:inherit;text-decoration:none}
+svg{display:block}
+button{font-family:inherit}
+
+/* skip link */
+.skip{position:fixed;top:-48px;left:16px;z-index:2000;background:var(--teal);color:#fff;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:11px 18px;border-radius:6px;transition:top var(--dur-med) var(--ease-ui)}
+.skip:focus{top:12px}
+
+/* scroll trace */
+#trace{position:fixed;top:0;left:0;height:2px;width:0;background:var(--teal);z-index:300;transition:opacity .4s}
+
+/* ================= INTRO ================= */
+#intro{position:fixed;inset:0;z-index:1000;background:#050505;display:flex;align-items:center;justify-content:center;transition:background .6s var(--ease)}
+#intro.lift{background:transparent;pointer-events:none}
+#intro .wrap{display:flex;flex-direction:column;align-items:center;will-change:transform}
+#introMark{width:104px;height:104px;will-change:transform}
+#intro .ip{opacity:0;transform-box:fill-box;transform-origin:center;transform:scale(.5) translateY(10px);transition:opacity .5s var(--ease),transform .6s var(--ease)}
+#intro .iw{margin-top:24px;font-family:var(--display);font-weight:600;font-size:1.05rem;letter-spacing:-.03em;color:#f0ebe3;opacity:0;transition:opacity .5s var(--ease)}
+#intro .iw span{color:rgba(240,235,227,.35)}
+body.lock{overflow:hidden;height:100vh}
+
+/* ================= NAV ================= */
+.nav{position:sticky;top:0;z-index:100;background:color-mix(in srgb,var(--bg) 84%,transparent);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-bottom:1px solid transparent;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 var(--edge);transition:border-color .4s var(--ease-ui)}
+.nav.scrolled{border-bottom-color:var(--border-l)}
+.brand{display:flex;align-items:center;gap:11px}
+.brand svg{width:24px;height:24px;opacity:0;transition:opacity .3s}
+.brand svg.on{opacity:1}
+.brand .w{font-family:var(--display);font-weight:600;font-size:1.05rem;letter-spacing:-.03em}
+.brand .w span{color:var(--ink-t)}
+.nav-right{display:flex;align-items:center;gap:22px}
+.nav-links{display:flex;gap:28px}
+.nav-links a{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-s);transition:color var(--dur-med) var(--ease-ui)}
+.nav-links a:hover{color:var(--ink)}
+.nav-links a.active{color:var(--teal-txt)}
+.theme-toggle{display:flex;border:1px solid var(--border);border-radius:100px;padding:3px;background:var(--surface)}
+.theme-toggle button{width:30px;height:24px;border:none;background:none;cursor:pointer;border-radius:100px;display:flex;align-items:center;justify-content:center;color:var(--ink-t);transition:background var(--dur-med) var(--ease-ui),color var(--dur-med) var(--ease-ui)}
+.theme-toggle button svg{width:13px;height:13px}
+.theme-toggle button.active{background:var(--teal);color:#fff}
+.menu-btn{display:none;width:38px;height:38px;border:1px solid var(--border);border-radius:8px;background:none;cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.menu-btn span{display:block;width:16px;height:1.5px;background:var(--ink);transition:transform var(--dur-med) var(--ease),opacity var(--dur-med)}
+.menu-btn[aria-expanded="true"] span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.menu-btn[aria-expanded="true"] span:nth-child(2){opacity:0}
+.menu-btn[aria-expanded="true"] span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.mmenu{position:fixed;top:64px;left:0;right:0;z-index:99;background:color-mix(in srgb,var(--bg) 96%,transparent);backdrop-filter:blur(24px);border-bottom:1px solid var(--border-l);padding:26px var(--edge) 30px;display:none;flex-direction:column;gap:22px}
+.mmenu.open{display:flex}
+.mmenu a{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-s)}
+.mmenu a.active{color:var(--teal-txt)}
+
+/* ================= HERO ================= */
+.hero{position:relative;overflow:hidden;min-height:calc(100vh - 64px);display:flex;align-items:center}
+.hero-grid{position:relative;display:grid;grid-template-columns:1.08fr .92fr;gap:clamp(32px,5vw,76px);align-items:center;width:100%;max-width:1260px;margin:0 auto;padding:64px var(--edge) 88px}
+.kicker{font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--teal-txt);display:flex;align-items:center;gap:11px;margin-bottom:30px}
+.kicker .kb{width:10px;height:10px;border-radius:2px;background:var(--teal);flex-shrink:0}
+.kicker .kl{width:18px;height:1.5px;background:currentColor;opacity:.55}
+.hero h1{font-family:var(--display);font-weight:300;font-size:clamp(2.5rem,5.7vw,4.9rem);line-height:.99;letter-spacing:-.046em}
+.hero h1 .l1{color:var(--ink-ghost)}
+.hero h1 .l2{color:var(--feat-h)}
+.hero h1 .wd{display:inline-block;opacity:0;transform:translateY(16px);transition:opacity .55s var(--ease),transform .62s var(--ease)}
+.hero h1.go .wd{opacity:1;transform:none}
+.lede{color:var(--feat-p);font-size:clamp(1.05rem,1.4vw,1.2rem);line-height:1.65;max-width:46ch;margin-top:30px}
+.hero-actions{margin-top:38px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.btn-primary{display:inline-flex;align-items:center;gap:12px;height:54px;padding:0 28px;background:var(--teal);color:#fff;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;border-radius:5px;font-weight:400;border:none;cursor:pointer;transition:background var(--dur-med) var(--ease-ui),transform var(--dur-med) var(--ease)}
+.btn-primary .ar{transition:transform var(--dur-slow) var(--ease)}
+.btn-primary:hover{background:var(--teal-br)}
+.btn-primary:hover .ar{transform:translateX(4px)}
+.btn-primary:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.hero .meta{margin-top:44px;font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-t)}
+.hero .fade{opacity:0;transform:translateY(12px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.hero .fade.go{opacity:1;transform:none}
+.hero-art-wrap{justify-self:end;width:100%;max-width:492px;will-change:transform}
+.hero-art{position:relative;cursor:pointer}
+.hero-art svg{width:100%;height:auto}
+.hero-art .rep{position:absolute;right:4px;bottom:-24px;font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-t);opacity:0;transition:opacity .4s var(--ease-ui)}
+.hero-art:hover .rep{opacity:.7}
+.scue{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--ink-t);display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;transition:opacity .8s var(--ease)}
+.scue.go{opacity:.7}
+.scue.gone{opacity:0}
+.scue .ln{width:1px;height:26px;background:var(--ink-t)}
+@media(max-width:880px){.hero-grid{grid-template-columns:1fr;gap:46px}.hero-art-wrap{max-width:340px;justify-self:start}.hero{min-height:auto}.scue{display:none}}
+
+/* ================= SECTIONS ================= */
+section.block{padding:clamp(84px,11vw,144px) var(--edge)}
+.container{max-width:1260px;margin:0 auto}
+h2{font-family:var(--display);font-weight:300;font-size:clamp(1.9rem,3.6vw,2.9rem);line-height:1.05;letter-spacing:-.04em}
+h2 .dim{color:var(--ink-ghost)}
+.sec-kicker{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--teal-txt);display:flex;align-items:center;gap:11px;margin-bottom:22px}
+.sec-kicker .kb{width:10px;height:10px;border-radius:2px;background:var(--teal);flex-shrink:0;transform:scale(0);transition:transform .5s var(--ease)}
+.sec-kicker .kl{width:0;height:1.5px;background:currentColor;opacity:.55;transition:width .6s var(--ease) .15s}
+.in .sec-kicker .kb,.go .sec-kicker .kb,.fcell.head.in .sec-kicker .kb{transform:scale(1)}
+.in .sec-kicker .kl,.go .sec-kicker .kl,.fcell.head.in .sec-kicker .kl{width:18px}
+.kicker .kb{transform:scale(0);transition:transform .5s var(--ease)}
+.kicker .kl{width:0;transition:width .6s var(--ease) .15s}
+.kicker.go .kb{transform:scale(1)}
+.kicker.go .kl{width:18px}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .85s var(--ease),transform .85s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+
+/* ================= FOCUS ================= */
+.focus-grid{display:grid;grid-template-columns:minmax(280px,.9fr) 1.5fr;gap:clamp(40px,6vw,100px);align-items:start}
+.focus-aside{position:sticky;top:108px}
+.focus-aside .intro{color:var(--ink-s);font-size:1.05rem;margin-top:20px;max-width:38ch;line-height:1.65}
+.ftrace{display:flex;gap:9px;margin-top:32px}
+.ftrace .tq{width:10px;height:10px;border-radius:2px;border:1px solid var(--border);background:transparent;transition:background var(--dur-slow) var(--ease-ui),border-color var(--dur-slow) var(--ease-ui)}
+.ftrace .tq.done{background:var(--teal-dark);border-color:var(--teal-dark)}
+.ftrace .tq.now{background:var(--teal);border-color:var(--teal)}
+.cap{display:grid;grid-template-columns:1fr 136px;gap:clamp(24px,3vw,48px);padding:48px 0;border-bottom:1px solid var(--border);align-items:center}
+.cap:first-child{border-top:1px solid var(--border)}
+.cap .num{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--ink-t);margin-bottom:10px;transition:color var(--dur-slow) var(--ease-ui)}
+.cap.in .num{color:var(--teal-txt)}
+.cap h3{font-family:var(--display);font-weight:500;font-size:clamp(1.3rem,2vw,1.62rem);letter-spacing:-.025em;margin-bottom:11px}
+.cap p{color:var(--ink-s);font-size:1rem;line-height:1.65;max-width:52ch}
+.cap .comp{width:136px;height:136px}
+.cap .comp .ag{opacity:0;transform-box:fill-box;transform-origin:center;transform:scale(.55);transition:opacity .5s var(--ease),transform .6s var(--ease)}
+.cap.in .comp .ag{opacity:1;transform:scale(1)}
+.cap .comp .p{transform-box:fill-box;transform-origin:center;transition:transform var(--dur-slow) var(--ease)}
+.cap:hover .comp .p{transform:translate(var(--tx,0),var(--ty,0)) rotate(var(--tr,0deg))}
+@media(max-width:880px){.focus-grid{grid-template-columns:1fr}.focus-aside{position:static}.ftrace{display:none}.cap{grid-template-columns:1fr 96px}.cap .comp{width:96px;height:96px}}
+
+/* ================= FORMATS ================= */
+.field{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:18px;overflow:hidden}
+.fcell{position:relative;background:var(--cell);padding:34px 32px 32px;min-height:286px;display:flex;flex-direction:column;justify-content:flex-end;cursor:pointer;text-align:left;border:none;opacity:0;transform:translateY(16px);transition:background var(--dur-slow) var(--ease-ui),opacity .7s var(--ease),transform .7s var(--ease)}
+.fcell.in{opacity:1;transform:none}
+.fcell:hover{background:var(--cell-hover)}
+.fcell:focus-visible{outline:2px solid var(--teal-br);outline-offset:-3px}
+.fcell.head{cursor:default;justify-content:flex-start}
+.fcell.head h2{font-size:clamp(1.5rem,2.4vw,2rem);margin-top:14px;color:var(--cell-h)}
+.fcell .fnum{position:absolute;top:26px;left:32px;font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--teal-txt)}
+.fcell .fart{position:absolute;top:26px;right:28px;width:90px;height:90px}
+.fcell .fart .ag{opacity:0;transform-box:fill-box;transform-origin:center;transform:scale(.5);transition:opacity .5s var(--ease),transform .55s var(--ease)}
+.fcell.in .fart .ag{opacity:1;transform:scale(1)}
+.fcell .fart .p{transform-box:fill-box;transform-origin:center;transition:transform var(--dur-slow) var(--ease)}
+.fcell:hover .fart .p{transform:translate(var(--tx,0),var(--ty,0)) rotate(var(--tr,0deg))}
+.fcell h3{font-family:var(--display);font-weight:500;font-size:1.35rem;letter-spacing:-.02em;color:var(--cell-h);margin-bottom:9px}
+.fcell p{color:var(--cell-p);font-size:.93rem;line-height:1.6;max-width:38ch}
+.fcell .fopen{margin-top:18px;font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-t);display:flex;align-items:center;gap:7px;transition:color var(--dur-med) var(--ease-ui)}
+.fcell .fopen svg{width:12px;height:12px;transition:transform var(--dur-med) var(--ease-ui)}
+.fcell:hover .fopen{color:var(--teal-txt)}
+.fcell:hover .fopen svg{transform:translate(2px,-2px)}
+@media(max-width:980px){.field{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.field{grid-template-columns:1fr}.fcell{min-height:240px}}
+
+/* ================= CONTACT ================= */
+.contact{position:relative;overflow:hidden;background:var(--panel)}
+.contact .bg{position:absolute;inset:0;width:100%;height:100%}
+.contact .bg path,.contact .bg circle{will-change:transform}
+.contact .container{position:relative;z-index:2;max-width:720px;margin:0 auto}
+.contact h2{color:var(--feat-h);font-size:clamp(2rem,4.2vw,3.1rem)}
+.contact p{color:var(--feat-p);font-size:1.08rem;margin-top:20px;max-width:46ch;line-height:1.65}
+.contact .row{display:flex;gap:12px;align-items:center;margin-top:36px;flex-wrap:wrap}
+.contact .email{display:inline-flex;align-items:center;gap:11px;height:54px;padding:0 30px;background:var(--email-bg);color:var(--email-tx);font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;border-radius:5px;font-weight:400;transition:transform var(--dur-med) var(--ease-ui),background var(--dur-med) var(--ease-ui),color var(--dur-med) var(--ease-ui)}
+.contact .email:hover{transform:translateY(-2px);background:var(--teal);color:#fff}
+.copybtn{height:54px;padding:0 18px;border:1px solid var(--border);background:transparent;border-radius:5px;color:var(--ink-s);font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:color var(--dur-med) var(--ease-ui),border-color var(--dur-med) var(--ease-ui)}
+.copybtn:hover{color:var(--ink);border-color:var(--ink-t)}
+#toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,16px);z-index:500;background:var(--surface);border:1px solid var(--border);color:var(--ink);font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding:11px 18px;border-radius:7px;opacity:0;pointer-events:none;transition:opacity var(--dur-med) var(--ease-ui),transform var(--dur-med) var(--ease)}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ================= FOOTER ================= */
+footer{padding:46px var(--edge);display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center;border-top:1px solid var(--border-l)}
+footer .fb{display:flex;align-items:center;gap:10px}
+footer .fb svg{width:20px;height:20px}
+footer .fb .w{font-family:var(--display);font-weight:600;font-size:.95rem;letter-spacing:-.02em}
+footer .fb .w span{color:var(--ink-t)}
+footer .fm{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-t)}
+footer .fl{display:flex;gap:20px}
+footer .fl a{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-s);transition:color var(--dur-med) var(--ease-ui)}
+footer .fl a:hover{color:var(--ink)}
+
+/* ================= MODAL ================= */
+.modal-overlay{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,.55);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;visibility:hidden;transition:opacity var(--dur-med) var(--ease-ui),visibility var(--dur-med) var(--ease-ui)}
+.modal-overlay.open{opacity:1;visibility:visible}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;max-width:580px;width:100%;max-height:86vh;overflow-y:auto;padding:clamp(28px,4vw,44px);position:relative;transform:translateY(16px) scale(.985);transition:transform var(--dur-slow) var(--ease)}
+.modal-overlay.open .modal{transform:none}
+.m-close{position:absolute;top:18px;right:18px;width:34px;height:34px;border:1px solid var(--border);background:none;border-radius:50%;cursor:pointer;color:var(--ink-s);display:flex;align-items:center;justify-content:center;transition:color var(--dur-med) var(--ease-ui),border-color var(--dur-med) var(--ease-ui)}
+.m-close:hover{color:var(--ink);border-color:var(--ink-t)}
+.m-close svg{width:15px;height:15px}
+.m-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding-right:34px}
+.m-kicker{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--teal-txt);margin-bottom:12px}
+.modal h3{font-family:var(--display);font-weight:600;font-size:1.6rem;letter-spacing:-.025em;margin-bottom:14px}
+.m-art{width:74px;height:74px;flex-shrink:0}
+.m-art .p{transform-box:fill-box;transform-origin:center}
+.m-intro{color:var(--ink-s);font-size:1.02rem;line-height:1.6;margin-bottom:8px}
+.m-grp{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-t);margin:24px 0 12px}
+.modal ul{list-style:none;display:grid;gap:9px}
+.modal li{display:grid;grid-template-columns:18px 1fr;gap:10px;font-size:.95rem;color:var(--ink-s);line-height:1.5}
+.modal li .mk{color:var(--teal-txt);font-weight:500}
+.m-note{margin-top:26px;padding:14px 16px;border-left:2px solid var(--teal);background:color-mix(in srgb,var(--teal) 7%,transparent);border-radius:0 8px 8px 0;font-size:.88rem;color:var(--ink-s);line-height:1.5}
+.m-note b{color:var(--ink);font-weight:600}
+.mrev{opacity:0;transform:translateY(8px);transition:opacity .45s var(--ease),transform .5s var(--ease)}
+.modal-overlay.open .mrev{opacity:1;transform:none}
+
+@media(max-width:820px){.nav-links{display:none}.menu-btn{display:flex}}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition-duration:.01ms!important}
+  .reveal,.hero .fade,.hero h1 .wd,.fcell,.mrev{opacity:1;transform:none}
+  .cap .comp .ag,.fcell .fart .ag{opacity:1;transform:none}
+  .sec-kicker .kb,.kicker .kb{transform:scale(1)}
+  .sec-kicker .kl,.kicker .kl{width:18px}
+}
+</style>
+</head>
+<body class="lock">
+<a class="skip" href="#main">Skip to content</a>
+<div id="trace" aria-hidden="true"></div>
+
+<!-- ================= INTRO ================= -->
+<div id="intro" aria-hidden="true">
+  <div class="wrap" id="introWrap">
+    <svg id="introMark" viewBox="0 0 100 100">
+      <rect class="ip" x="6" y="6" width="42" height="42" rx="3" fill="#1a7a6d"/>
+      <rect class="ip" x="52" y="6" width="42" height="42" rx="3" fill="#3d1f47"/>
+      <rect class="ip" x="6" y="52" width="42" height="42" rx="3" fill="#c48a2a"/>
+      <path class="ip" d="M52 94 Q52 52 94 52 L94 94 Z" fill="#d4416b"/>
+    </svg>
+    <div class="iw" id="introWord">bridge<span>·</span>work</div>
+  </div>
+</div>
+
+<!-- ================= NAV ================= -->
+<nav class="nav" id="nav">
+  <a class="brand" href="index.html" aria-label="bridge-work home">
+    <svg id="navMark" viewBox="0 0 100 100" aria-hidden="true"><rect x="6" y="6" width="42" height="42" rx="3" fill="#1a7a6d"/><rect x="52" y="6" width="42" height="42" rx="3" fill="#3d1f47"/><rect x="6" y="52" width="42" height="42" rx="3" fill="#c48a2a"/><path d="M52 94 Q52 52 94 52 L94 94 Z" fill="#d4416b"/></svg>
+    <span class="w">bridge<span>·</span>work</span>
+  </a>
+  <div class="nav-right">
+    <div class="nav-links">
+      <a href="index.html" class="active">Home</a>
+      <a href="lab.html">Lab</a>
+      <a href="blog.html">Blog</a>
+    </div>
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-label="Menu"><span></span><span></span><span></span></button>
+    <div class="theme-toggle" role="group" aria-label="Theme">
+      <button id="t-dark" class="active" aria-label="Dark mode"><svg viewBox="0 0 24 24" fill="none"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" fill="currentColor"/></svg></button>
+      <button id="t-light" aria-label="Light mode"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="5" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4" y1="4" x2="5.5" y2="5.5"/><line x1="18.5" y1="18.5" x2="20" y2="20"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4" y1="20" x2="5.5" y2="18.5"/><line x1="18.5" y1="5.5" x2="20" y2="4"/></g></svg></button>
+    </div>
+  </div>
+</nav>
+<div class="mmenu" id="mmenu">
+  <a href="index.html" class="active">Home</a>
+  <a href="lab.html">Lab</a>
+  <a href="blog.html">Blog</a>
+</div>
+
+<main id="main">
+<!-- ================= HERO ================= -->
+<header class="hero" id="top">
+  <div class="hero-grid">
+    <div>
+      <div class="kicker" id="heroKick"><span class="kb"></span><span class="kl"></span>AI adoption &amp; governance</div>
+      <h1 id="heroH1">
+        <span class="l1" data-line="Most organisations bought AI."></span><br>
+        <span class="l2" data-line="Few changed how work happens."></span>
+      </h1>
+      <p class="lede fade">bridge-work helps organisations turn AI from scattered experiments into usable working practice — by connecting governance, technology and the people who do the work.</p>
+      <div class="hero-actions fade">
+        <a href="#contact" class="btn-primary" id="cta">Start a conversation<span class="ar">→</span></a>
+      </div>
+      <div class="meta fade">Basel · Switzerland · platform-agnostic</div>
+    </div>
+    <div class="hero-art-wrap" id="heroArtWrap">
+      <div class="hero-art" id="heroArt" role="img" aria-label="bridge-work identity field — the Signal Mark within its breathing primitive grid">
+        <span class="rep">tap · replay</span>
+      </div>
+    </div>
+  </div>
+  <div class="scue" id="scue"><span>scroll</span><span class="ln"></span></div>
+</header>
+
+<!-- ================= FOCUS ================= -->
+<section class="block" id="practice">
+  <div class="container">
+    <div class="focus-grid">
+      <div class="focus-aside reveal">
+        <div class="sec-kicker"><span class="kb"></span><span class="kl"></span>Focus</div>
+        <h2>AI adoption is not a tooling problem. <span class="dim">It is a working-systems problem.</span></h2>
+        <p class="intro">The work starts where ambition meets reality: data, governance, habits, workflows and trust.</p>
+        <div class="ftrace" id="ftrace" aria-hidden="true"><span class="tq"></span><span class="tq"></span><span class="tq"></span></div>
+      </div>
+      <div class="focus-main">
+        <article class="cap" data-comp="arch">
+          <div>
+            <div class="num">01</div>
+            <h3>Adoption Architecture</h3>
+            <p>Clarifying where AI can create value, what the organisation is ready for, and what needs to be true before anything scales.</p>
+          </div>
+          <svg class="comp" viewBox="0 0 132 132" aria-hidden="true"></svg>
+        </article>
+        <article class="cap" data-comp="gov">
+          <div>
+            <div class="num">02</div>
+            <h3>Governance Translation</h3>
+            <p>Turning policy, privacy and responsibility into decisions, roles and everyday practices people can actually follow.</p>
+          </div>
+          <svg class="comp" viewBox="0 0 132 132" aria-hidden="true"></svg>
+        </article>
+        <article class="cap" data-comp="work">
+          <div>
+            <div class="num">03</div>
+            <h3>Workforce Enablement</h3>
+            <p>Building the shared language, confidence and rituals teams need to use AI responsibly in real work.</p>
+          </div>
+          <svg class="comp" viewBox="0 0 132 132" aria-hidden="true"></svg>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FORMATS ================= -->
+<section class="block" id="formats">
+  <div class="container">
+    <div class="field" id="fieldGrid">
+      <div class="fcell head">
+        <div class="sec-kicker"><span class="kb"></span><span class="kl"></span>Formats</div>
+        <h2>Ways of working together.</h2>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section class="block contact" id="contact">
+  <svg class="bg" viewBox="0 0 1200 520" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <path class="cdr" data-v="-26" d="M1040 -60 Q1040 180 1280 180 L1280 -60 Z" fill="#0a4a3f" opacity=".45"/>
+    <circle class="cdr" data-v="20" cx="1130" cy="370" r="95" fill="#3d1f47" opacity=".4"/>
+    <path class="cdr" data-v="-14" d="M-40 320 Q-40 480 120 480 Q120 320 -40 320 Z" fill="#0a4a3f" opacity=".35"/>
+  </svg>
+  <div class="container reveal">
+    <div class="sec-kicker"><span class="kb"></span><span class="kl"></span>Start</div>
+    <h2>Bring one real AI adoption question.</h2>
+    <p>We can turn it into something clearer: a decision, a first experiment, a governance question, or a practical next step.</p>
+    <div class="row">
+      <a class="email" href="mailto:info@bridge-work.ai">info@bridge-work.ai →</a>
+      <button class="copybtn" id="copyEmail" aria-label="Copy email address">copy</button>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="fb">
+    <svg viewBox="0 0 100 100" aria-hidden="true"><rect x="6" y="6" width="42" height="42" rx="3" fill="#1a7a6d"/><rect x="52" y="6" width="42" height="42" rx="3" fill="#3d1f47"/><rect x="6" y="52" width="42" height="42" rx="3" fill="#c48a2a"/><path d="M52 94 Q52 52 94 52 L94 94 Z" fill="#d4416b"/></svg>
+    <span class="w">bridge<span>·</span>work</span>
+  </div>
+  <div class="fm">© 2026 bridge-work.ai · Basel, Switzerland</div>
+  <div class="fl"><a href="#">Imprint</a><a href="#">Privacy</a><a href="#">LinkedIn</a></div>
+</footer>
+
+<div id="toast" role="status">address copied</div>
+
+<!-- ================= MODAL ================= -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" id="modal">
+    <button class="m-close" id="modal-close" aria-label="Close"><svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    <div class="m-head">
+      <div>
+        <div class="m-kicker mrev">Format</div>
+        <h3 id="modal-title" class="mrev"></h3>
+      </div>
+      <svg class="m-art mrev" id="modal-art" viewBox="0 0 90 90" aria-hidden="true"></svg>
+    </div>
+    <p class="m-intro mrev" id="modal-intro"></p>
+    <div class="m-grp mrev">Good for</div>
+    <ul id="modal-goodfor" class="mrev"></ul>
+    <div class="m-grp mrev">Typical outputs</div>
+    <ul id="modal-outputs" class="mrev"></ul>
+    <div class="m-note mrev" id="modal-note"></div>
+  </div>
+</div>
+
+<script>
+'use strict';
+const NS='http://www.w3.org/2000/svg';
+const REDUCE=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const C={teal:'#1a7a6d',tealDark:'#0f5c52',tealDeep:'#0a4a3f',purple:'#3d1f47',purpleMid:'#5a3068',violet:'#6e43a7',rose:'#d4416b',amber:'#c48a2a',gold:'#b78100'};
+
+/* shape factory — canon: arcs filled only */
+function H(t,x,y,s,f,op,extra){
+  const o=(op&&op!==1)?` opacity="${op}"`:'';const ex=extra||'';
+  if(t==='sq')return `<rect x="${x}" y="${y}" width="${s}" height="${s}" rx="${Math.max(2,s*.08)}" fill="${f}"${o}${ex}/>`;
+  if(t==='circle')return `<circle cx="${x+s/2}" cy="${y+s/2}" r="${s*.46}" fill="${f}"${o}${ex}/>`;
+  if(t==='arc-br')return `<path d="M${x} ${y+s} Q${x} ${y} ${x+s} ${y} L${x+s} ${y+s} Z" fill="${f}"${o}${ex}/>`;
+  if(t==='arc-tl')return `<path d="M${x+s} ${y} Q${x} ${y} ${x} ${y+s} L${x+s} ${y+s} Z" fill="${f}"${o}${ex}/>`;
+  if(t==='arc-tr')return `<path d="M${x} ${y} Q${x+s} ${y} ${x+s} ${y+s} L${x} ${y+s} Z" fill="${f}"${o}${ex}/>`;
+  if(t==='arc-bl')return `<path d="M${x+s} ${y+s} Q${x} ${y+s} ${x} ${y} L${x+s} ${y} Z" fill="${f}"${o}${ex}/>`;
+  if(t==='leaf')return `<path d="M${x} ${y} Q${x+s} ${y} ${x+s} ${y+s} Q${x} ${y+s} ${x} ${y} Z" fill="${f}"${o}${ex}/>`;
+  if(t==='leaf-inv')return `<path d="M${x+s} ${y} Q${x} ${y} ${x} ${y+s} Q${x+s} ${y+s} ${x+s} ${y} Z" fill="${f}"${o}${ex}/>`;
+  return '';
+}
+/* functional register: structure stroked in BRAND COLOUR (teal/purple) — never ink; arc never stroked */
+function SR(x,y,s,col,sw,rot){return `<rect x="${x}" y="${y}" width="${s}" height="${s}" rx="${Math.max(2,s*.12)}" fill="none" stroke="${col||C.teal}" stroke-width="${sw||5}"${rot?` transform="rotate(${rot} ${x+s/2} ${y+s/2})"`:''}/>`}
+function SC(x,y,s,col,sw){return `<circle cx="${x+s/2}" cy="${y+s/2}" r="${s*.46}" fill="none" stroke="${col||C.teal}" stroke-width="${sw||5}"/>`}
+function SL(x1,y1,x2,y2,col,sw){return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${col||C.teal}" stroke-width="${sw||4}" stroke-linecap="round" stroke-opacity=".85"/>`}
+
+/* ============ HERO FIELD — the identity instrument ============
+   Assembles from the Signal Mark, then a sin² breathing loop with
+   pointer-proximity signal and a one-shot rose pulse from the CTA. */
+const FIELD={tiles:[],raf:null,t0:0,running:false,visible:true,px:null,py:null,inside:false};
+function buildHeroField(replay){
+  if(FIELD.raf)cancelAnimationFrame(FIELD.raf);FIELD.raf=null;FIELD.running=false;
+  FIELD.tiles=[];FIELD.px=FIELD.py=null;FIELD.inside=false;
+  const host=document.getElementById('heroArt');
+  host.querySelectorAll('svg').forEach(s=>s.remove());
+  const svg=document.createElementNS(NS,'svg');
+  svg.setAttribute('viewBox','0 0 404 404');
+  host.prepend(svg);
+  const s=86,g=18,ox=4,oy=4;
+  const mark=[['sq',0,0,C.teal],['sq',1,0,C.purple],['sq',0,1,C.amber],['arc-br',1,1,C.rose]];
+  const rest=[
+    ['arc-tl',2,0,C.tealDark],['circle',3,0,C.purpleMid],
+    ['leaf',2,1,C.tealDeep],['sq',3,1,C.gold],
+    ['sq',0,2,C.tealDeep],['circle',1,2,C.gold],['arc-br',2,2,C.purpleMid],['leaf-inv',3,2,C.tealDark],
+    ['arc-tr',0,3,C.purpleMid],['leaf',1,3,C.tealDark],['sq',2,3,C.tealDeep],['arc-bl',3,3,C.gold]
+  ];
+  let i2=0;
+  function place(t,cx,cy,col,isMark,idx){
+    const x=ox+cx*(s+g),y=oy+cy*(s+g);
+    const wrap=document.createElementNS(NS,'g');
+    wrap.innerHTML=H(t,x,y,s,col,1);
+    const el=wrap.firstChild;
+    el.style.transformBox='fill-box';el.style.transformOrigin='center';
+    el.style.opacity=0;el.style.transform='scale(.55)';
+    el.style.transition='opacity .55s var(--ease), transform .65s var(--ease)';
+    svg.appendChild(el);
+    const d=isMark? idx*130 : 620+Math.hypot(cx-.5,cy-.5)*190;
+    FIELD.tiles.push({el,d,isMark,sp:.45+((i2*7)%10)/14,ph:i2*.8,pulse:0,prox:0});i2++;
+  }
+  mark.forEach((m,i)=>place(m[0],m[1],m[2],m[3],true,i));
+  rest.forEach(r=>place(r[0],r[1],r[2],r[3],false,0));
+  if(REDUCE){FIELD.tiles.forEach(t=>{t.el.style.opacity=t.isMark?1:.8;t.el.style.transform='scale(1)'});return}
+  let maxEnd=0;
+  FIELD.tiles.forEach(t=>{
+    setTimeout(()=>{t.el.style.opacity=t.isMark?1:.82;t.el.style.transform='scale(1)';},t.d);
+    maxEnd=Math.max(maxEnd,t.d);
+  });
+  setTimeout(()=>startFieldLoop(),maxEnd+760);
+}
+function startFieldLoop(){
+  if(FIELD.running)return;FIELD.running=true;FIELD.t0=performance.now();
+  FIELD.tiles.forEach(t=>{t.el.style.transition='none'});
+  const loop=(now)=>{
+    FIELD.raf=requestAnimationFrame(loop);
+    if(!FIELD.visible||document.hidden)return;
+    const t=(now-FIELD.t0)/1000;
+    const useProx=FIELD.inside&&FIELD.px!==null;
+    for(const tl of FIELD.tiles){
+      /* pointer proximity → signal */
+      let target=0;
+      if(useProx){
+        const r=tl.el.getBoundingClientRect();
+        const dx=FIELD.px-(r.left+r.width/2),dy=FIELD.py-(r.top+r.height/2);
+        const dist=Math.hypot(dx,dy);
+        target=Math.max(0,1-dist/150);
+      }
+      tl.prox+=(target-tl.prox)*.12;          /* eased follow */
+      tl.pulse*=.93;                            /* one-shot decay */
+      const sc=1+.05*tl.prox+.1*tl.pulse;
+      tl.el.style.transform=`scale(${sc.toFixed(4)})`;
+      if(tl.isMark){
+        tl.el.style.opacity=1;
+      }else{
+        const w=Math.sin(t*tl.sp+tl.ph);
+        const breathe=.46+.4*w*w;
+        tl.el.style.opacity=Math.min(1,breathe+.55*tl.prox).toFixed(3);
+      }
+    }
+  };
+  FIELD.raf=requestAnimationFrame(loop);
+}
+const heroArt=document.getElementById('heroArt');
+heroArt.addEventListener('click',()=>buildHeroField(true));
+heroArt.addEventListener('pointermove',e=>{FIELD.px=e.clientX;FIELD.py=e.clientY;FIELD.inside=true},{passive:true});
+heroArt.addEventListener('pointerleave',()=>{FIELD.inside=false});
+/* pause when hero offscreen */
+new IntersectionObserver(es=>es.forEach(e=>{FIELD.visible=e.isIntersecting}),{threshold:.05}).observe(document.getElementById('top'));
+/* CTA → rose signal-confirm: one pulse, no loop */
+document.getElementById('cta').addEventListener('pointerenter',()=>{
+  const rose=FIELD.tiles.find(t=>t.isMark&&t.el.tagName==='path');
+  if(rose)rose.pulse=1;
+});
+
+/* ============ HERO TEXT ============ */
+(function prep(){
+  const h=document.getElementById('heroH1');
+  h.querySelectorAll('span[data-line]').forEach(line=>{
+    line.innerHTML=line.dataset.line.split(' ').map(w=>`<span class="wd">${w}</span>`).join(' ');
+  });
+  h.querySelectorAll('.wd').forEach((w,i)=>{w.style.transitionDelay=(i*70)+'ms'});
+})();
+function startHero(){
+  document.getElementById('heroKick').classList.add('go');
+  document.getElementById('heroH1').classList.add('go');
+  document.querySelectorAll('.hero .fade').forEach((el,i)=>{
+    el.style.transitionDelay=(420+i*150)+'ms';el.classList.add('go');
+  });
+  setTimeout(()=>document.getElementById('scue').classList.add('go'),1400);
+  setTimeout(()=>buildHeroField(false),260);
+}
+
+/* ============ INTRO — assemble, then the mark travels into the nav ============ */
+(function(){
+  const intro=document.getElementById('intro');
+  const wrap=document.getElementById('introWrap');
+  const word=document.getElementById('introWord');
+  const navMark=document.getElementById('navMark');
+  function done(){navMark.classList.add('on');document.body.classList.remove('lock');intro.remove();}
+  if(REDUCE){done();startHero();return}
+  const pieces=intro.querySelectorAll('.ip');
+  pieces.forEach((p,i)=>setTimeout(()=>{p.style.opacity=1;p.style.transform='scale(1) translateY(0)';},140+i*145));
+  setTimeout(()=>{word.style.opacity=1},820);
+  setTimeout(()=>{
+    /* FLIP: fly the assembled mark into the nav slot */
+    word.style.opacity=0;
+    const a=document.getElementById('introMark').getBoundingClientRect();
+    const b=navMark.getBoundingClientRect();
+    const dx=(b.left+b.width/2)-(a.left+a.width/2);
+    const dy=(b.top+b.height/2)-(a.top+a.height/2);
+    const sc=b.width/a.width;
+    wrap.style.transition='transform .68s var(--ease)';
+    wrap.style.transform=`translate(${dx}px,${dy}px) scale(${sc})`;
+    intro.classList.add('lift');
+    document.body.classList.remove('lock');
+    startHero();
+    setTimeout(()=>{navMark.classList.add('on');intro.remove();},700);
+  },1880);
+})();
+
+/* ============ SCROLL: trace, nav border, cue, parallax ============ */
+const trace=document.getElementById('trace'),nav=document.getElementById('nav'),scue=document.getElementById('scue');
+const artWrap=document.getElementById('heroArtWrap');
+let ticking=false;
+function onScroll(){
+  if(ticking)return;ticking=true;
+  requestAnimationFrame(()=>{
+    const y=window.scrollY;
+    const h=document.documentElement.scrollHeight-innerHeight;
+    trace.style.width=(h>0?(y/h*100):0)+'%';
+    nav.classList.toggle('scrolled',y>8);
+    if(y>40)scue.classList.add('gone');
+    if(!REDUCE){
+      artWrap.style.transform=`translate3d(0,${(y*-.05).toFixed(1)}px,0)`;
+      document.querySelectorAll('.contact .cdr').forEach(el=>{
+        const r=el.closest('.contact').getBoundingClientRect();
+        const p=Math.min(1,Math.max(0,1-(r.top/innerHeight)));
+        el.style.transform=`translate3d(0,${(p*parseFloat(el.dataset.v)).toFixed(1)}px,0)`;
+      });
+    }
+    ticking=false;
+  });
+}
+addEventListener('scroll',onScroll,{passive:true});
+
+/* ============ THEME (view transitions where supported) ============ */
+const root=document.documentElement,bd=document.getElementById('t-dark'),bl=document.getElementById('t-light');
+function applyTheme(t){root.setAttribute('data-theme',t);bd.classList.toggle('active',t==='dark');bl.classList.toggle('active',t==='light')}
+function setTheme(t){
+  if(document.startViewTransition&&!REDUCE){document.startViewTransition(()=>applyTheme(t))}
+  else applyTheme(t);
+}
+bd.addEventListener('click',()=>setTheme('dark'));
+bl.addEventListener('click',()=>setTheme('light'));
+
+/* ============ MOBILE MENU ============ */
+const menuBtn=document.getElementById('menuBtn'),mmenu=document.getElementById('mmenu');
+menuBtn.addEventListener('click',()=>{
+  const open=mmenu.classList.toggle('open');
+  menuBtn.setAttribute('aria-expanded',open);
+});
+mmenu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{mmenu.classList.remove('open');menuBtn.setAttribute('aria-expanded','false')}));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&mmenu.classList.contains('open')){mmenu.classList.remove('open');menuBtn.setAttribute('aria-expanded','false')}});
+
+/* ============ FOCUS COMPOSITIONS ============ */
+/* Focus = functional register, Joint Principle: each mark depicts a RELATION.
+   Line structure in ink + exactly ONE solid accent (the thing being bridged/joined). */
+const COMPS={
+  /* containment — the right piece finding its place in the structure */
+  arch:[ [SR(18,18,92,C.teal),''],
+         [H('arc-br',62,62,42,C.amber),'--tx:-3px;--ty:-3px'],
+         [SC(94,28,34,C.purpleMid),'--tx:-5px'] ],
+  /* passage — a rule crossing the boundary into practice */
+  gov:[ [SL(66,14,66,118,C.purpleMid),''],
+        [H('arc-br',40,44,44,C.amber),'--tx:5px'],
+        [SC(86,68,34,C.teal),'--tx:3px'] ],
+  /* junction — two people joined */
+  work:[ [SC(20,40,52,C.teal),'--tx:3px'],
+         [SC(60,40,52,C.purpleMid),'--tx:-3px'],
+         [H('leaf',49,33,34,C.amber),'--tr:10deg'] ]
+};
+document.querySelectorAll('.cap').forEach(cap=>{
+  const svg=cap.querySelector('.comp');
+  COMPS[cap.dataset.comp].forEach(([html,vars],i)=>{
+    const g=document.createElementNS(NS,'g');g.classList.add('ag');
+    g.style.transitionDelay=(i*120)+'ms';
+    g.innerHTML=`<g class="p" style="${vars}">${html}</g>`;
+    svg.appendChild(g);
+  });
+});
+/* in-view + position trace */
+const caps=[...document.querySelectorAll('.cap')];
+const tqs=[...document.querySelectorAll('.ftrace .tq')];
+const capIO=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){e.target.classList.add('in')}
+}),{threshold:.35});
+caps.forEach(c=>capIO.observe(c));
+const traceIO=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    const i=caps.indexOf(e.target);
+    if(e.isIntersecting){
+      tqs.forEach((q,j)=>{q.classList.toggle('now',j===i);q.classList.toggle('done',j<i)});
+    }
+  });
+},{rootMargin:'-40% 0px -40% 0px'});
+caps.forEach(c=>traceIO.observe(c));
+
+/* ============ FORMATS ============ */
+/* Formats = functional register, Container dialect: a constant neutral ink frame
+   (the format is the container); inside, ONE solid essence + line support. */
+const FRAME=`<rect x="9" y="9" width="72" height="72" rx="12" fill="none" stroke="${C.teal}" stroke-width="4"/>`;
+const FMT=[
+  {key:'m365',n:'01',title:'M365 trainings',line:'Teams, SharePoint, OneDrive and collaboration basics — explained through real work, not feature lists.',
+   art:[ [FRAME,''],
+         [H('sq',27,27,16,C.teal),'--tx:-2px;--ty:-2px'],
+         [SR(47,27,16,C.purpleMid,3.5),'--tx:2px;--ty:-2px'],[SR(27,47,16,C.purpleMid,3.5),'--tx:-2px;--ty:2px'],[SR(47,47,16,C.purpleMid,3.5),'--tx:2px;--ty:2px'] ]},
+  {key:'ai',n:'02',title:'AI adoption workshops',line:'From scattered prompting to shared use cases, learning paths and first experiments.',
+   art:[ [FRAME,''],
+         [SC(19,28,34,C.teal,4),'--tx:4px'],[H('circle',37,28,34,C.amber,.9),'--tx:-4px'] ]},
+  {key:'gov',n:'03',title:'Governance translation',line:'Making policy, privacy and responsibility usable in everyday decisions.',
+   art:[ [FRAME,''],
+         [H('arc-br',25,25,26,C.amber),'--tx:3px;--ty:3px'],[SC(47,47,22,C.purpleMid,4),'--ty:-3px'] ]},
+  {key:'consulting',n:'04',title:'Consulting & sparring',line:'A bridge between IT, leadership, legal, communication and users.',
+   art:[ [FRAME,''],
+         [SC(18,50,20,C.purpleMid,4),'--tx:3px;--ty:-3px'],[SC(52,18,20,C.purpleMid,4),'--tx:-3px;--ty:3px'],
+         [H('leaf',35,35,20,C.teal),'--tr:12deg'] ]},
+  {key:'lab',n:'05',title:'Lab sessions',line:'Small experiments with tools, prompts and workflows before things become official.',
+   art:[ [FRAME,''],
+         [H('sq',26,26,22,C.amber,1,' transform="rotate(12 37 37)"'),'--tr:8deg'],
+         [SC(48,46,20,C.teal,4),'--ty:-3px'] ]}
+];
+const ARTMAP={};
+const fieldGrid=document.getElementById('fieldGrid');
+FMT.forEach(f=>{
+  ARTMAP[f.key]=f.art;
+  const b=document.createElement('button');
+  b.className='fcell';b.dataset.format=f.key;b.setAttribute('aria-haspopup','dialog');
+  const art=f.art.map(([html,vars],i)=>`<g class="ag" style="transition-delay:${i*110}ms"><g class="p" style="${vars}">${html}</g></g>`).join('');
+  b.innerHTML=`<span class="fnum">${f.n}</span>
+    <svg class="fart" viewBox="0 0 90 90" aria-hidden="true">${art}</svg>
+    <div><h3>${f.title}</h3><p>${f.line}</p>
+    <span class="fopen">Detail <svg viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M9 7h8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>`;
+  fieldGrid.appendChild(b);
+});
+const allCells=[...document.querySelectorAll('.fcell')];
+const cellIO=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){e.target.classList.add('in');cellIO.unobserve(e.target)}
+}),{threshold:.25});
+allCells.forEach((c,i)=>{c.style.transitionDelay=(i*70)+'ms';cellIO.observe(c)});
+
+/* ============ GENERIC REVEALS ============ */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* ============ COPY EMAIL + TOAST ============ */
+const toast=document.getElementById('toast');
+document.getElementById('copyEmail').addEventListener('click',()=>{
+  navigator.clipboard.writeText('info@bridge-work.ai').then(()=>{
+    toast.classList.add('show');
+    setTimeout(()=>toast.classList.remove('show'),1700);
+  });
+});
+
+/* ============ MODAL — content unchanged, staggered entrance ============ */
+const FORMATS={
+  m365:{title:'M365 trainings',intro:'Practical Microsoft 365 sessions for teams that need clarity, confidence and better collaboration habits.',
+    goodfor:['Teams starting with Microsoft Teams, SharePoint or OneDrive','Organisations moving away from email and file chaos','Super users, multipliers or change communities','Teams that need simple rules for collaboration'],
+    outputs:['Clearer Teams and channel usage','Shared file and collaboration practices','Practical Q&A around real work','Better readiness for AI-enabled collaboration'],
+    note:'<b>Tone:</b> not feature training — work enablement through M365.'},
+  ai:{title:'AI adoption workshops',intro:'Focused workshops that help teams move from individual prompting to shared AI use cases and responsible experimentation.',
+    goodfor:['Teams curious about AI but unsure where to begin','Organisations with scattered AI experiments','Leaders who need realistic use cases','Teams that want to learn by testing, not abstract AI talks'],
+    outputs:['First AI use-case map','Prioritised experiments','Risks and assumptions made visible','Practical next steps for learning and adoption'],
+    note:'<b>Tone:</b> no hype — structured exploration.'},
+  gov:{title:'Governance translation',intro:'Working sessions that turn policies, privacy concerns and responsibilities into practical decisions people can understand and follow.',
+    goodfor:['Organisations preparing for AI use','Teams stuck between legal, IT, leadership and users','Public-sector or governance-sensitive environments','Situations where “policy exists” but practice is unclear'],
+    outputs:['Decision principles','Role and responsibility clarity','Practical rules for AI use','Governance questions translated into workflow reality'],
+    note:'<b>Note:</b> this is not legal advice — it is translation between governance and everyday work.'},
+  consulting:{title:'Consulting & sparring',intro:'Strategic and practical support for organisations that need a bridge between technology, leadership, IT, legal, communication and users.',
+    goodfor:['Early-stage AI or M365 transformation questions','Leaders who need a second brain before deciding','Project teams needing structure','Organisations that want a pragmatic outside perspective'],
+    outputs:['Problem framing','Workshop design','Adoption roadmap input','Stakeholder and communication structure','Clearer next decisions'],
+    note:'<b>Tone:</b> personal and flexible, not a large consulting package.'},
+  lab:{title:'Lab sessions',intro:'Small experimental formats for exploring tools, prompts, workflows and prototypes before turning them into official processes.',
+    goodfor:['Teams that want to test before formalising','AI learning formats','Prompt and workflow experiments','Prototype-based exploration'],
+    outputs:['Small working prototypes','Prompt or workflow patterns','Learning notes','Better questions for the next step'],
+    note:'<b>Tone:</b> playful but serious — experimentation with structure.'}
+};
+const overlay=document.getElementById('modal-overlay'),modal=document.getElementById('modal'),mClose=document.getElementById('modal-close');
+let lastFocused=null;
+function li(t){const l=document.createElement('li');l.innerHTML='<span class="mk">—</span><span>'+t+'</span>';return l}
+function openModal(key){
+  const f=FORMATS[key];if(!f)return;
+  lastFocused=document.activeElement;
+  document.getElementById('modal-title').textContent=f.title;
+  document.getElementById('modal-intro').textContent=f.intro;
+  const artSvg=document.getElementById('modal-art');
+  artSvg.innerHTML=(ARTMAP[key]||[]).map(([html])=>html).join('');
+  const gf=document.getElementById('modal-goodfor');gf.innerHTML='';f.goodfor.forEach(t=>gf.appendChild(li(t)));
+  const op=document.getElementById('modal-outputs');op.innerHTML='';f.outputs.forEach(t=>op.appendChild(li(t)));
+  document.getElementById('modal-note').innerHTML=f.note;
+  modal.querySelectorAll('.mrev').forEach((el,i)=>{el.style.transitionDelay=(80+i*70)+'ms'});
+  overlay.classList.add('open');document.body.style.overflow='hidden';mClose.focus();
+}
+function closeModal(){
+  overlay.classList.remove('open');document.body.style.overflow='';
+  modal.querySelectorAll('.mrev').forEach(el=>{el.style.transitionDelay='0ms'});
+  if(lastFocused)lastFocused.focus();
+}
+document.querySelectorAll('.fcell:not(.head)').forEach(b=>b.addEventListener('click',()=>openModal(b.dataset.format)));
+mClose.addEventListener('click',closeModal);
+overlay.addEventListener('click',e=>{if(e.target===overlay)closeModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&overlay.classList.contains('open'))closeModal()});
+modal.addEventListener('keydown',e=>{
+  if(e.key!=='Tab')return;
+  const f=modal.querySelectorAll('button, a[href], [tabindex]:not([tabindex="-1"])');
+  if(!f.length)return;
+  const first=f[0],last=f[f.length-1];
+  if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}
+  else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}
+});
+</script>
+</body>
+</html>

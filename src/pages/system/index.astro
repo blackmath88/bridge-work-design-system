@@ -1,0 +1,26 @@
+---
+import Base from '@/layouts/Base.astro';
+import { getCollection } from 'astro:content';
+const concepts = (await getCollection('concepts')).sort((a,b)=>a.data.order-b.data.order);
+---
+<Base title="The System — bridge-work.ai">
+  <section>
+    <div class="kick">Brand identity &amp; system · canon v1.3</div>
+    <h1>The canon.</h1>
+    <p class="lead">The conceptual core, as living documents. Each is markdown in <code>src/content/concepts/</code> — edit there, the page updates. The full interactive guide (registers shown side-by-side, the laws rendered as do/don't pairs) is preserved as the reference build.</p>
+    <div class="cards">
+      {concepts.map(c => (
+        <a class="tile" href={`/system/${c.slug}/`}>
+          <div class="ti">{c.data.status}</div>
+          <h3>{c.data.title}</h3>
+          <p>{c.data.summary}</p>
+        </a>
+      ))}
+      <a class="tile" href="/system/prototype/">
+        <div class="ti">reference build</div>
+        <h3>Index prototype →</h3>
+        <p>The canonical landing page the system is derived from.</p>
+      </a>
+    </div>
+  </section>
+</Base>

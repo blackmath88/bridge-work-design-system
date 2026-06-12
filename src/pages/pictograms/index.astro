@@ -1,0 +1,60 @@
+---
+import Base from '@/layouts/Base.astro';
+import Pictogram from '@/components/Pictogram.astro';
+import { byCategory, PICTOGRAMS } from '@/data/pictograms.mjs';
+const groups = byCategory();
+---
+<Base title="Pictogram Library — bridge-work.ai">
+  <section>
+    <div class="kick">Meaning register · canon v1.3 · {PICTOGRAMS.length} marks</div>
+    <h1>The pictogram library.</h1>
+    <p class="lead">Aicher's discipline married to the bridge-work grammar: strokes at 0/45/90 only, teal structure, curvature only as filled forms, one solid accent, every mark passing the name-it test. Tap any mark to copy its SVG. Accent: <button class="acc on" data-a="amber">amber</button> <button class="acc" data-a="cyan">cyan</button> <button class="acc" data-a="violet">violet</button></p>
+    <div class="note"><b>For developers:</b> these are a typed registry, not loose files. In any Astro surface: <code>&lt;Pictogram id="lock" accent="cyan" size={32} /&gt;</code>. Add a mark in <code>src/data/pictograms.mjs</code>, run <code>npm run icons:check</code>.</div>
+
+    {groups.map(g => (
+      <>
+        <div class="cathead">{g.cat}</div>
+        <div class="pgrid">
+          {g.items.map(p => (
+            <div class="pcell" data-id={p.id}>
+              <div class="cv">
+                <span class="v-amber"><Pictogram id={p.id} accent="amber" size={64} label={p.id} /></span>
+                <span class="v-cyan" hidden><Pictogram id={p.id} accent="cyan" size={64} label={p.id} /></span>
+                <span class="v-violet" hidden><Pictogram id={p.id} accent="violet" size={64} label={p.id} /></span>
+              </div>
+              <div class="nm"><div class="t">{p.id}</div><div class="h">{p.hint}</div></div>
+            </div>
+          ))}
+        </div>
+      </>
+    ))}
+  </section>
+
+  <style>
+    .acc{font-family:var(--font-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;margin-left:2px}
+    .acc.on{background:var(--teal);border-color:var(--teal);color:#fff}
+    .pcell{cursor:pointer;transition:border-color .25s,transform .35s var(--ease);position:relative}
+    .pcell:hover{border-color:rgba(240,235,227,.2);transform:translateY(-2px)}
+    .pcell.flash::after{content:"copied ✓";position:absolute;inset:0;display:grid;place-items:center;background:rgba(5,5,5,.82);font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-txt)}
+  </style>
+
+  <script>
+    const cells = document.querySelectorAll('.pcell');
+    // accent toggle
+    document.querySelectorAll('.acc').forEach(btn => btn.addEventListener('click', () => {
+      const a = btn.dataset.a;
+      document.querySelectorAll('.acc').forEach(b => b.classList.toggle('on', b === btn));
+      cells.forEach(c => ['amber','cyan','violet'].forEach(x =>
+        c.querySelector('.v-'+x).hidden = (x !== a)));
+    }));
+    // tap to copy the visible SVG
+    cells.forEach(c => c.addEventListener('click', () => {
+      const vis = [...c.querySelectorAll('.cv span')].find(s => !s.hidden);
+      const svg = vis?.querySelector('svg')?.outerHTML;
+      if (!svg) return;
+      navigator.clipboard.writeText(svg).then(() => {
+        c.classList.add('flash'); setTimeout(() => c.classList.remove('flash'), 850);
+      });
+    }));
+  </script>
+</Base>

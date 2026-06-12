@@ -1,0 +1,28 @@
+---
+import Base from '@/layouts/Base.astro';
+import { getCollection } from 'astro:content';
+export async function getStaticPaths() {
+  const concepts = await getCollection('concepts');
+  return concepts.map(entry => ({ params: { slug: entry.slug }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+---
+<Base title={`${entry.data.title} — bridge-work.ai`}>
+  <section class="prose">
+    <div class="kick">{entry.data.status}</div>
+    <Content />
+    <p style="margin-top:40px"><a href="/system/" style="color:var(--teal-txt);font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase">← system</a></p>
+  </section>
+  <style is:global>
+    .prose{max-width:760px}
+    .prose h1{font-family:var(--font-display);font-weight:300;font-size:clamp(2rem,4vw,3rem);letter-spacing:-.04em;margin:8px 0 6px}
+    .prose h2{font-family:var(--font-display);font-weight:500;font-size:1.4rem;margin:34px 0 0;letter-spacing:-.02em}
+    .prose p{color:var(--muted);margin-top:14px;font-size:15.5px;line-height:1.7}
+    .prose ul,.prose ol{color:var(--muted);margin:14px 0 0 22px;font-size:15px;line-height:1.7}
+    .prose li{margin-top:6px}
+    .prose blockquote{border-left:2px solid var(--teal);padding:6px 0 6px 18px;margin:20px 0;color:var(--ink);font-size:1.1rem}
+    .prose strong{color:var(--ink);font-weight:500}
+    .prose code{font-family:var(--font-mono);font-size:.88em}
+  </style>
+</Base>

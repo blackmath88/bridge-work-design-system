@@ -1,0 +1,20 @@
+---
+/* <Pictogram id="lock" accent="amber" size={48} label="Lock" />
+   Renders at build time → ships pure inline SVG, zero runtime JS.
+   This is the payoff of the registry: draw once, use everywhere. */
+import * as H from '@/data/pictogram-engine.mjs';
+import { PICTOGRAMS } from '@/data/pictograms.mjs';
+
+interface Props { id: string; accent?: 'amber'|'cyan'|'violet'; size?: number; label?: string; }
+const { id, accent = 'amber', size = 48, label } = Astro.props;
+
+const entry = PICTOGRAMS.find(p => p.id === id);
+if (!entry) throw new Error(`[Pictogram] unknown id "${id}". Add it to src/data/pictograms.mjs.`);
+
+const A = H.ACCENTS[accent] ?? H.ACCENTS.amber;
+const parts = entry.draw(H, A);
+const inner = parts.join('');
+---
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width={size} height={size}
+     fill="none" role={label ? 'img' : undefined} aria-label={label} aria-hidden={label ? undefined : 'true'}
+     set:html={inner} />
